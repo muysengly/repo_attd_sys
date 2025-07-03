@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -79,7 +79,7 @@ group_name = "database"
 face_names = db.read_face_names(group_name)
 
 
-# In[ ]:
+# In[7]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -99,7 +99,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[8]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -182,7 +182,7 @@ def on_listview_single_clicked():
 
         else:
             win.label_image_1.clear()
-            win.label_image_1.setText("No Image #1")
+            win.label_image_1.setText("No data")
 
         img_2 = db.read_image_2(group_name, selected.data())
         if img_2 is not None and len(img_2) > 0:
@@ -192,7 +192,7 @@ def on_listview_single_clicked():
             win.label_image_2.setPixmap(q_pixmap)
         else:
             win.label_image_2.clear()
-            win.label_image_2.setText("No Image #2")
+            win.label_image_2.setText("No data")
 
 
 win.listView_name.selectionModel().selectionChanged.connect(on_listview_single_clicked)
@@ -213,8 +213,8 @@ def on_listview_right_click_context_menu(point):
                 if len(db.read_face_names(group_name)) == 0:  # if no data in database
                     win.label_image_1.clear()
                     win.label_image_2.clear()
-                    win.label_image_1.setText("No Image #1")
-                    win.label_image_2.setText("No Image #2")
+                    win.label_image_1.setText("No data")
+                    win.label_image_2.setText("No data")
 
 
 win.listView_name.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -380,7 +380,7 @@ def on_button_clear_image_1_clicked():
     if win.listView_name.selectedIndexes():
         selected = win.listView_name.selectedIndexes()[0]
         win.label_image_1.clear()
-        win.label_image_1.setText("No Image #1")
+        win.label_image_1.setText("No data")
 
         db.delete_image_1(group_name, selected.data())
         db.delete_emb_1(group_name, selected.data())
@@ -394,7 +394,7 @@ def on_button_clear_image_2_clicked():
         selected = win.listView_name.selectedIndexes()[0]
 
         win.label_image_2.clear()
-        win.label_image_2.setText("No Image #2")
+        win.label_image_2.setText("No data")
 
         db.delete_image_2(group_name, selected.data())
         db.delete_emb_2(group_name, selected.data())

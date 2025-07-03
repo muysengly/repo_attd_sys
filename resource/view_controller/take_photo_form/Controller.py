@@ -65,7 +65,7 @@ fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/u
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 
 
-# In[ ]:
+# In[5]:
 
 
 cap = cv2.VideoCapture(0)

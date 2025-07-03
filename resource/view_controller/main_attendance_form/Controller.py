@@ -41,7 +41,7 @@ if os.name == "nt":
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
 
 
-# In[ ]:
+# In[3]:
 
 
 from insightface.app import FaceAnalysis
@@ -54,8 +54,9 @@ from PyQt5.QtWidgets import *
 
 import cv2
 import pickle
-import numpy as np
+import zipfile
 import requests
+import numpy as np
 
 
 
@@ -278,7 +279,7 @@ win.pushButton_query.clicked.connect(f_query)
 def f_update():
     try:
         headers = {"Accept": "application/vnd.github.v3.raw"}
-        git_version_string = requests.get("https://api.github.com/repos/muysengly/repo_attendance_system/contents/resource/variable/_version.txt", headers=headers).text
+        git_version_string = requests.get("https://api.github.com/repos/muysengly/repo_attendance_system_gtr/contents/resource/variable/_version.txt", headers=headers).text
         git_version_int = list(map(int, git_version_string.split(".")))
 
         if git_version_int > version_int:  # NOTE: 1.0.2 < 1.0.3 / 1.0.2 < 1.1.0 / 1.0.2 < 2.0.0
@@ -287,7 +288,7 @@ def f_update():
             if reply == QMessageBox.Yes:
 
                 for _ in range(10):  # retry up to 10 times
-                    response = requests.get("https://github.com/muysengly/repo_attendance_system/archive/refs/heads/main.zip", stream=True)
+                    response = requests.get("https://github.com/muysengly/repo_attendance_system_gtr/archive/refs/heads/main.zip", stream=True)
                     total_size = int(response.headers.get("content-length", 0))
                     if total_size > 0:
                         break
@@ -313,7 +314,8 @@ def f_update():
 
                     # extract the downloaded zip file
                     with zipfile.ZipFile("tmp.zip", "r") as zip_ref:
-                        zip_ref.extractall("c:\\")
+                        pass # TODO: extract to linux
+                        # zip_ref.extractall("c:\\")
 
                     # show message box to inform the user
                     QMessageBox.information(win, "Update Complete", f"Updated to version {git_version_string}. \nPlease restart the application.")

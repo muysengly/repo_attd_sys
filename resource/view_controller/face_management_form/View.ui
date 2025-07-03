@@ -233,7 +233,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Image #1</string>
+             <string>Face #1</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -289,7 +289,7 @@
            <enum>QFrame::Box</enum>
           </property>
           <property name="text">
-           <string>No Image #1</string>
+           <string>No data</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -380,7 +380,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Image #2</string>
+               <string>Face #2</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -436,7 +436,7 @@
              <enum>QFrame::Box</enum>
             </property>
             <property name="text">
-             <string>No Image #2</string>
+             <string>No data</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>

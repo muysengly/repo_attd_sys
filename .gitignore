@@ -1,0 +1,14 @@
+/.git
+/.vscode
+
+/__sample__
+/**/__pycache__
+/__tmp__
+
+/log/*.jpg
+/resource/utility/test
+
+attendance.sqlite
+database.sqlite
+
+z-*.py

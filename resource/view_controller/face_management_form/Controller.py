@@ -99,7 +99,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[ ]:
+# In[8]:
 
 
 app = QApplication([])
@@ -414,4 +414,23 @@ app.exec_()
 
 
 app = None
+
+
+# In[9]:
+
+
+y = 640
+x = 480
+
+
+# In[16]:
+
+
+4 * 50
+
+
+# In[17]:
+
+
+3 * 50
 

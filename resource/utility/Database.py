@@ -8,6 +8,8 @@ class DataBase:
     ####################____________________####################
     def __init__(self, db_name):
         self.conn = sqlite3.connect(db_name)
+        # create defult table if it does not exist
+        self.create_table("database")
         print("Database connected!")
 
     def close(self):

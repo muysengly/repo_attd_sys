@@ -14,4 +14,7 @@ source venv/bin/activate
 # install dependencies
 pip install pyqt5 opencv-python insightface onnxruntime
 
+# Change working directory to home directory
+cd ~
+
 read -p "Press any key to continue . . ."

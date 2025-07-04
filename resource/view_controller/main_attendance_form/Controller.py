@@ -29,16 +29,19 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
 
-os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
-os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-os.environ["QT_SCALE_FACTOR"] = "1"
-os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
-
-
-if os.name == "nt":
+if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
+elif os.name == "posix":  # POSIX: Portable Operating System Interface
+    if "darwin" in os.sys.platform:
+        pass  # macOS system
+    else:
+        os.environ["DISPLAY"] = ":0"  # Set display
+        os.environ["QT_QPA_PLATFORM"] = "eglfs"  # Set platform for Qt
+        # pass # Linux system
+else:
+    pass  # Other OS
 
 
 # In[3]:
@@ -149,83 +152,89 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_clock.setText(dt.now().strftime("Time: %H:%M:%S"))
 
     def paintEvent(self, event):
-        _, frame = cap.read()
+        global cap
 
-        frame = cv2.flip(frame, 1)
+        if not cap:
+            cap = cv2.VideoCapture(0)
+        else:
 
-        self.frame_count += 1
-        if self.frame_count % self.SKIP_FRAMES == 0:
-            self.frame_count = 0
-            self.database = face_db.read_name_emb1_emb2(group_name)
-            self.faces = fa.get(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            _, frame = cap.read()
 
-        if len(self.faces) > 0:
-            for face in self.faces:
+            frame = cv2.flip(frame, 1)
 
-                box = face.bbox.astype(int)
+            self.frame_count += 1
+            if self.frame_count % self.SKIP_FRAMES == 0:
+                self.frame_count = 0
+                self.database = face_db.read_name_emb1_emb2(group_name)
+                self.faces = fa.get(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
-                # check if face is too small
-                if (box[2] - box[0]) < 100 or (box[3] - box[1]) < 100:  # skip small faces
-                    cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 0, 255), thickness=2)
-                    cv2.putText(img=frame, text="Too small!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
-                    continue
+            if len(self.faces) > 0:
+                for face in self.faces:
 
-                # check if face is in database
-                if len(self.database) == 0:
-                    cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 0, 255), thickness=2)
-                    cv2.putText(img=frame, text="No database!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
-                    continue
+                    box = face.bbox.astype(int)
 
-                # check if face out of screen
-                if box[0] - 20 < 0 or box[1] - 20 < 0 or box[2] + 20 > frame.shape[1] or box[3] + 20 > frame.shape[0]:
-                    continue
+                    # check if face is too small
+                    if (box[2] - box[0]) < 100 or (box[3] - box[1]) < 100:  # skip small faces
+                        cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 0, 255), thickness=2)
+                        cv2.putText(img=frame, text="Too small!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
+                        continue
 
-                # compare face with database
-                scores = [max(compare_faces_cosine(face.embedding, data[1]) if data[1] is not None else 0, compare_faces_cosine(face.embedding, data[2]) if data[2] is not None else 0) for data in self.database]
+                    # check if face is in database
+                    if len(self.database) == 0:
+                        cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 0, 255), thickness=2)
+                        cv2.putText(img=frame, text="No database!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
+                        continue
 
-                if np.max(scores) > threshold / 100:
+                    # check if face out of screen
+                    if box[0] - 20 < 0 or box[1] - 20 < 0 or box[2] + 20 > frame.shape[1] or box[3] + 20 > frame.shape[0]:
+                        continue
 
-                    cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 255, 0), thickness=2)
-                    cv2.putText(img=frame, text=f"{np.max(scores)*100:.0f}% {self.database[np.argmax(scores)][0]}", org=(box[0] - 15, box[1]), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
-                    cv2.putText(img=frame, text="Attended!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
+                    # compare face with database
+                    scores = [max(compare_faces_cosine(face.embedding, data[1]) if data[1] is not None else 0, compare_faces_cosine(face.embedding, data[2]) if data[2] is not None else 0) for data in self.database]
 
-                    # Check if name is already in attendance list
-                    if self.database[np.argmax(scores)][0] not in self.listView_attd.model().stringList():
+                    if np.max(scores) > threshold / 100:
 
-                        # Add name to attendance list
-                        self.listView_attd.model().insertRow(self.listView_attd.model().rowCount())
+                        cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 255, 0), thickness=2)
+                        cv2.putText(img=frame, text=f"{np.max(scores)*100:.0f}% {self.database[np.argmax(scores)][0]}", org=(box[0] - 15, box[1]), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
+                        cv2.putText(img=frame, text="Attended!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 255, 0), thickness=2)
 
-                        self.listView_attd.model().setData(self.listView_attd.model().index(self.listView_attd.model().rowCount() - 1), self.database[np.argmax(scores)][0])
-                        self.listView_attd.scrollToBottom()
+                        # Check if name is already in attendance list
+                        if self.database[np.argmax(scores)][0] not in self.listView_attd.model().stringList():
 
-                        name = self.database[np.argmax(scores)][0]
-                        self.attd_timestamps[name] = dt.now()
+                            # Add name to attendance list
+                            self.listView_attd.model().insertRow(self.listView_attd.model().rowCount())
 
-                        timer = QTimer(self)
-                        timer.setSingleShot(True)
-                        timer.timeout.connect(lambda n=name: (self.attd_timestamps.pop(n, None), getattr(self, "attd_timers", {}).pop(n, None), self.listView_attd.model().removeRow(self.listView_attd.model().stringList().index(n)) if n in self.listView_attd.model().stringList() else None))
-                        timer.start(60 * 1000)  # 1 minute
+                            self.listView_attd.model().setData(self.listView_attd.model().index(self.listView_attd.model().rowCount() - 1), self.database[np.argmax(scores)][0])
+                            self.listView_attd.scrollToBottom()
 
-                        if not hasattr(self, "attd_timers"):
-                            self.attd_timers = {}
-                        self.attd_timers[name] = timer
+                            name = self.database[np.argmax(scores)][0]
+                            self.attd_timestamps[name] = dt.now()
 
-                        attd_db.add_data(group_name, self.database[np.argmax(scores)][0], dt.now().strftime("%Y-%m-%d"), dt.now().strftime("%H:%M:%S"))
+                            timer = QTimer(self)
+                            timer.setSingleShot(True)
+                            timer.timeout.connect(lambda n=name: (self.attd_timestamps.pop(n, None), getattr(self, "attd_timers", {}).pop(n, None), self.listView_attd.model().removeRow(self.listView_attd.model().stringList().index(n)) if n in self.listView_attd.model().stringList() else None))
+                            timer.start(60 * 1000)  # 1 minute
 
-                        cv2.imwrite(f"{path_depth}log/log_{group_name}_{self.database[np.argmax(scores)][0]}_{dt.now().strftime('%Y%m%d')}{dt.now().strftime('%H%M%S')}.jpg", frame)
+                            if not hasattr(self, "attd_timers"):
+                                self.attd_timers = {}
+                            self.attd_timers[name] = timer
 
-                else:
+                            attd_db.add_data(group_name, self.database[np.argmax(scores)][0], dt.now().strftime("%Y-%m-%d"), dt.now().strftime("%H:%M:%S"))
 
-                    cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 0, 255), thickness=2)
-                    cv2.putText(img=frame, text=f"{np.max(scores)*100:.0f}% {self.database[np.argmax(scores)][0]}", org=(box[0] - 15, box[1]), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
-                    cv2.putText(img=frame, text="Unknown!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
+                            cv2.imwrite(f"{path_depth}log/log_{group_name}_{self.database[np.argmax(scores)][0]}_{dt.now().strftime('%Y%m%d')}{dt.now().strftime('%H%M%S')}.jpg", frame)
 
-        _image = cv2.resize(frame, (self.label_camera.width(), self.label_camera.height()))
-        _image = cv2.cvtColor(_image, cv2.COLOR_BGR2RGB)
-        q_image = QImage(_image.data, _image.shape[1], _image.shape[0], _image.strides[0], QImage.Format_RGB888)
-        q_pixmap = QPixmap.fromImage(q_image)
+                    else:
 
-        self.label_camera.setPixmap(q_pixmap)
+                        cv2.rectangle(img=frame, pt1=(box[0] - 20, box[1] - 20), pt2=(box[2] + 20, box[3] + 20), color=(0, 0, 255), thickness=2)
+                        cv2.putText(img=frame, text=f"{np.max(scores)*100:.0f}% {self.database[np.argmax(scores)][0]}", org=(box[0] - 15, box[1]), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
+                        cv2.putText(img=frame, text="Unknown!", org=(box[0] - 15, box[3] + 10), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 255), thickness=2)
+
+            _image = cv2.resize(frame, (self.label_camera.width(), self.label_camera.height()))
+            _image = cv2.cvtColor(_image, cv2.COLOR_BGR2RGB)
+            q_image = QImage(_image.data, _image.shape[1], _image.shape[0], _image.strides[0], QImage.Format_RGB888)
+            q_pixmap = QPixmap.fromImage(q_image)
+
+            self.label_camera.setPixmap(q_pixmap)
 
 
 # In[9]:

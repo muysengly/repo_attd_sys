@@ -28,20 +28,19 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
-if os.name == "nt":
+if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
-elif os.name == "posix":
+elif os.name == "posix":  # POSIX: Portable Operating System Interface
     if "darwin" in os.sys.platform:
-        # print("Running on macOS")
-        pass
+        pass  # macOS system
     else:
-        # print("Running on Linux or Unix-like OS")
-        pass
+        os.environ["DISPLAY"] = ":0"  # Set display
+        os.environ["QT_QPA_PLATFORM"] = "eglfs"  # Set platform for Qt
+        # pass # Linux system
 else:
-    # print(f"Unknown OS: {os.name}")
-    pass
+    pass  # Other OS
 
 
 os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"

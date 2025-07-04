@@ -29,16 +29,19 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
 
-os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
-os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-os.environ["QT_SCALE_FACTOR"] = "1"
-os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
-
-
-if os.name == "nt":
+if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
+elif os.name == "posix":  # POSIX: Portable Operating System Interface
+    if "darwin" in os.sys.platform:
+        pass  # macOS system
+    else:
+        os.environ["DISPLAY"] = ":0"  # Set display
+        os.environ["QT_QPA_PLATFORM"] = "eglfs"  # Set platform for Qt
+        # pass # Linux system
+else:
+    pass  # Other OS
 
 
 # In[3]:
@@ -75,11 +78,22 @@ fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 # In[6]:
 
 
+def is_ascii(text):
+    try:
+        text.encode('ascii')
+        return True
+    except UnicodeEncodeError:
+        return False
+
+
+# In[7]:
+
+
 group_name = "database"
 face_names = db.read_face_names(group_name)
 
 
-# In[7]:
+# In[8]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -99,7 +113,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[8]:
+# In[9]:
 
 
 app = QApplication([])
@@ -112,6 +126,7 @@ win.pushButton_take_photo_1.setIcon(QIcon(f"{path_depth}resource/asset/photo-cam
 win.pushButton_take_photo_2.setIcon(QIcon(f"{path_depth}resource/asset/photo-camera.png"))
 win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 win.pushButton_add.setIcon(QIcon(f"{path_depth}resource/asset/add_person.png"))
+win.pushButton_delete.setIcon(QIcon(f"{path_depth}resource/asset/delete.png"))
 
 _name = ""
 
@@ -122,14 +137,23 @@ def on_button_add_click():
 
     text = win.lineEdit_name.text()
     if text is not None:
-        text = text.strip()
-        if text.upper() not in db.read_face_names(group_name):
-            win.listView_name.model().insertRow(win.listView_name.model().rowCount())
-            index = win.listView_name.model().index(win.listView_name.model().rowCount() - 1)
-            win.listView_name.model().setData(index, text.upper())
-            db.create_face_name(group_name, text.upper())
+        if text.strip() != "":
+            if is_ascii(text):
+                text = text.strip()
+                if text.upper() not in db.read_face_names(group_name):
+                    win.listView_name.model().insertRow(win.listView_name.model().rowCount())
+                    index = win.listView_name.model().index(win.listView_name.model().rowCount() - 1)
+                    win.listView_name.model().setData(index, text.upper())
+                    db.create_face_name(group_name, text.upper())
+
+                else:
+                    QMessageBox.warning(win, "Warning", "Name already exists!")
+            else:
+                QMessageBox.warning(win, "Warning", "Name must be ASCII characters only!")
         else:
-            QMessageBox.warning(win, "Warning", "Name already exists!")
+            QMessageBox.warning(win, "Warning", "Name cannot be empty!")
+    else:
+        QMessageBox.warning(win, "Warning", "Name cannot be empty!")
 
     win.lineEdit_name.clear()
     win.lineEdit_name.setFocus()
@@ -198,27 +222,27 @@ def on_listview_single_clicked():
 win.listView_name.selectionModel().selectionChanged.connect(on_listview_single_clicked)
 
 
-def on_listview_right_click_context_menu(point):
+def on_button_delete_clicked():
     if win.listView_name.selectedIndexes():
-        index = win.listView_name.indexAt(point)
-        if index.isValid():
-            menu = QMenu()
-            delete_icon = QIcon(f"{path_depth}resource/asset/delete.png")
-            delete_action = menu.addAction(delete_icon, "Delete")
-            action = menu.exec_(win.listView_name.mapToGlobal(point))
-            if action == delete_action:
-                name = index.data()
-                win.listView_name.model().removeRow(index.row())
-                db.delete_face_name(group_name, name)
-                if len(db.read_face_names(group_name)) == 0:  # if no data in database
-                    win.label_image_1.clear()
-                    win.label_image_2.clear()
-                    win.label_image_1.setText("No data")
-                    win.label_image_2.setText("No data")
+
+        selected = win.listView_name.selectedIndexes()[0]
+        name = selected.data()
+
+        win.listView_name.model().removeRow(selected.row())
+        db.delete_face_name(group_name, name)
+
+        # Clear images if no data left
+        if len(db.read_face_names(group_name)) == 0:
+            win.label_image_1.clear()
+            win.label_image_1.setText("No data")
+            win.label_image_2.clear()
+            win.label_image_2.setText("No data")
+        else:
+            win.listView_name.setCurrentIndex(win.listView_name.model().index(0, 0))
+            on_listview_single_clicked()
 
 
-win.listView_name.setContextMenuPolicy(Qt.CustomContextMenu)
-win.listView_name.customContextMenuRequested.connect(on_listview_right_click_context_menu)
+win.pushButton_delete.clicked.connect(on_button_delete_clicked)
 
 
 def on_button_upload_image_1_clicked():
@@ -414,23 +438,4 @@ app.exec_()
 
 
 app = None
-
-
-# In[9]:
-
-
-y = 640
-x = 480
-
-
-# In[16]:
-
-
-4 * 50
-
-
-# In[17]:
-
-
-3 * 50
 

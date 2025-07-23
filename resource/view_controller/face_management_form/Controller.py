@@ -91,6 +91,7 @@ def is_ascii(text):
 
 group_name = "database"
 face_names = db.read_face_names(group_name)
+face_names
 
 
 # In[8]:
@@ -113,7 +114,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[9]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -126,7 +127,12 @@ win.pushButton_take_photo_1.setIcon(QIcon(f"{path_depth}resource/asset/photo-cam
 win.pushButton_take_photo_2.setIcon(QIcon(f"{path_depth}resource/asset/photo-camera.png"))
 win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 win.pushButton_add.setIcon(QIcon(f"{path_depth}resource/asset/add_person.png"))
+win.pushButton_delete.setText("")
 win.pushButton_delete.setIcon(QIcon(f"{path_depth}resource/asset/delete.png"))
+win.pushButton_clear_image_1.setText("")
+win.pushButton_clear_image_1.setIcon(QIcon(f"{path_depth}resource/asset/delete.png"))
+win.pushButton_clear_image_2.setText("")
+win.pushButton_clear_image_2.setIcon(QIcon(f"{path_depth}resource/asset/delete.png"))
 
 _name = ""
 

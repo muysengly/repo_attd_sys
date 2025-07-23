@@ -62,7 +62,6 @@ import requests
 import numpy as np
 
 
-
 from datetime import datetime as dt
 
 
@@ -88,6 +87,20 @@ fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 # In[6]:
 
 
+token = pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))
+print(f"Token: {token}")
+
+
+# In[7]:
+
+
+chat_id = pickle.load(open(f"{path_depth}resource/variable/_chat_id.pkl", "rb"))
+print(f"Chat ID: {chat_id}")
+
+
+# In[8]:
+
+
 group_name = "database"
 
 face_names = face_db.read_face_names(group_name)
@@ -95,7 +108,7 @@ face_names = face_db.read_face_names(group_name)
 threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "rb"))
 
 
-# In[7]:
+# In[9]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -103,7 +116,18 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[8]:
+# In[10]:
+
+
+def send_telegram_message(chat_id, message, photo, token=token):
+    url = f"https://api.telegram.org/bot{token}/sendPhoto"
+    files = {"photo": open(photo, "rb")}
+    data = {"chat_id": chat_id, "caption": message}
+    response = requests.post(url, files=files, data=data)
+    return response.json()
+
+
+# In[ ]:
 
 
 cap = []
@@ -221,7 +245,13 @@ class Window(Ui_MainWindow, QMainWindow):
 
                             attd_db.add_data(group_name, self.database[np.argmax(scores)][0], dt.now().strftime("%Y-%m-%d"), dt.now().strftime("%H:%M:%S"))
 
-                            cv2.imwrite(f"{path_depth}log/log_{group_name}_{self.database[np.argmax(scores)][0]}_{dt.now().strftime('%Y%m%d')}{dt.now().strftime('%H%M%S')}.jpg", frame)
+                            log_path = f"{path_depth}log/log_{group_name}_{self.database[np.argmax(scores)][0]}_{dt.now().strftime('%Y%m%d')}{dt.now().strftime('%H%M%S')}.jpg"
+                            cv2.imwrite(log_path, frame)
+
+                            # Send Telegram message
+                            for id in chat_id:
+                                message = f"Attendance Alert!\nName: {self.database[np.argmax(scores)][0]}\nTime: {dt.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                                send_telegram_message(id, message, log_path, token)
 
                     else:
 
@@ -237,7 +267,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[9]:
+# In[12]:
 
 
 cap = cv2.VideoCapture(0)
@@ -283,6 +313,17 @@ def f_query():
     win.show()
 
 win.pushButton_query.clicked.connect(f_query)
+
+
+def goto_telegram():
+    win.close()
+    cap.release()
+    os.system("python " + path_depth + "resource/view_controller/telegram_form/Controller.py")
+    cap.open(0)
+    win.show()
+
+win.pushButton_telegram.clicked.connect(goto_telegram)
+
 
 
 def f_update():
@@ -338,6 +379,8 @@ def f_update():
 
 
 win.pushButton_update.clicked.connect(f_update)
+
+win.pushButton_update.deleteLater()
 
 
 app.exec_()

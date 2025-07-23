@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[15]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[16]:
 
 
 import os
@@ -44,7 +44,7 @@ else:
     pass  # Other OS
 
 
-# In[3]:
+# In[17]:
 
 
 from insightface.app import FaceAnalysis
@@ -65,7 +65,7 @@ import numpy as np
 from datetime import datetime as dt
 
 
-# In[4]:
+# In[18]:
 
 
 from Database import DataBase
@@ -77,25 +77,46 @@ from AttendanceDatabase import AttendanceDatabase
 attd_db = AttendanceDatabase(path_depth + "attendance.sqlite")
 
 
-# In[5]:
+# In[19]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 
 
-# In[6]:
+# In[20]:
 
 
-token = pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))
-print(f"Token: {token}")
+if not os.path.exists(f"{path_depth}resource/variable/_token.pkl"):
+    pickle.dump([], open(f"{path_depth}resource/variable/_token.pkl", "wb"))
 
 
-# In[7]:
+# token = pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))
+# print(f"Token: {token}")
 
 
-chat_id = pickle.load(open(f"{path_depth}resource/variable/_chat_id.pkl", "rb"))
-print(f"Chat ID: {chat_id}")
+# In[21]:
+
+
+if not os.path.exists(f"{path_depth}resource/variable/_chat_id.pkl"):
+    pickle.dump([], open(f"{path_depth}resource/variable/_chat_id.pkl", "wb"))
+
+# chat_id = pickle.load(open(f"{path_depth}resource/variable/_chat_id.pkl", "rb"))
+# print(f"Chat ID: {chat_id}")
+
+
+# In[22]:
+
+
+if not os.path.exists(f"{path_depth}resource/variable/_photo.pkl"):
+    pickle.dump([], open(f"{path_depth}resource/variable/_photo.pkl", "wb"))
+
+
+# In[23]:
+
+
+if not os.path.exists(f"{path_depth}resource/variable/_threshold.pkl"):
+    pickle.dump(70, open(f"{path_depth}resource/variable/_threshold.pkl", "wb"))
 
 
 # In[8]:
@@ -119,7 +140,7 @@ def compare_faces_cosine(emb1, emb2):
 # In[10]:
 
 
-def send_telegram_message(chat_id, message, photo, token=token):
+def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
     url = f"https://api.telegram.org/bot{token}/sendPhoto"
     files = {"photo": open(photo, "rb")}
     data = {"chat_id": chat_id, "caption": message}
@@ -127,7 +148,7 @@ def send_telegram_message(chat_id, message, photo, token=token):
     return response.json()
 
 
-# In[ ]:
+# In[11]:
 
 
 cap = []
@@ -249,9 +270,10 @@ class Window(Ui_MainWindow, QMainWindow):
                             cv2.imwrite(log_path, frame)
 
                             # Send Telegram message
-                            for id in chat_id:
-                                message = f"Attendance Alert!\nName: {self.database[np.argmax(scores)][0]}\nTime: {dt.now().strftime('%Y-%m-%d %H:%M:%S')}"
-                                send_telegram_message(id, message, log_path, token)
+                            if len(pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))) > 0 and len(pickle.load(open(f"{path_depth}resource/variable/_chat_id.pkl", "rb"))) > 0:
+                                for id in pickle.load(open(f"{path_depth}resource/variable/_chat_id.pkl", "rb")):
+                                    message = f"Attendance Alert!\nName: {self.database[np.argmax(scores)][0]}\nTime: {dt.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                                    send_telegram_message(id, message, log_path)
 
                     else:
 

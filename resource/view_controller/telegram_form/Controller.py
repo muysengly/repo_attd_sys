@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[8]:
 
 
 # TODO: 
@@ -12,7 +12,7 @@
 # - 
 
 
-# In[2]:
+# In[9]:
 
 
 import os
@@ -49,7 +49,7 @@ else:
 # os.environ["NO_ALBUMENTATIONS_UPDATE"] = "0"
 
 
-# In[3]:
+# In[10]:
 
 
 from View import Ui_MainWindow
@@ -61,14 +61,14 @@ from PyQt5.QtWidgets import *
 import pickle
 
 
-# In[4]:
+# In[11]:
 
 
 token = pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))
 print(f"Token: {token}")
 
 
-# In[5]:
+# In[12]:
 
 
 # chat_id = ["fasdf", "asdfsadf"]
@@ -94,7 +94,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[ ]:
+# In[7]:
 
 
 app = QApplication([])

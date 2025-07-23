@@ -17,3 +17,5 @@ resource/utility/models/buffalo_sc.zip
 
 **/*.ipynb
 **/*.ui
+
+resource/variable/*.pkl

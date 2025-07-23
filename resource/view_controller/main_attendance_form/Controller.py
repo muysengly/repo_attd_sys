@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[15]:
+# In[1]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[16]:
+# In[2]:
 
 
 import os
@@ -44,7 +44,7 @@ else:
     pass  # Other OS
 
 
-# In[17]:
+# In[3]:
 
 
 from insightface.app import FaceAnalysis
@@ -65,7 +65,7 @@ import numpy as np
 from datetime import datetime as dt
 
 
-# In[18]:
+# In[4]:
 
 
 from Database import DataBase
@@ -77,49 +77,42 @@ from AttendanceDatabase import AttendanceDatabase
 attd_db = AttendanceDatabase(path_depth + "attendance.sqlite")
 
 
-# In[19]:
+# In[5]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 
 
-# In[20]:
+# In[ ]:
 
 
 if not os.path.exists(f"{path_depth}resource/variable/_token.pkl"):
     pickle.dump([], open(f"{path_depth}resource/variable/_token.pkl", "wb"))
 
 
-# token = pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))
-# print(f"Token: {token}")
-
-
-# In[21]:
+# In[ ]:
 
 
 if not os.path.exists(f"{path_depth}resource/variable/_chat_id.pkl"):
     pickle.dump([], open(f"{path_depth}resource/variable/_chat_id.pkl", "wb"))
 
-# chat_id = pickle.load(open(f"{path_depth}resource/variable/_chat_id.pkl", "rb"))
-# print(f"Chat ID: {chat_id}")
 
-
-# In[22]:
+# In[8]:
 
 
 if not os.path.exists(f"{path_depth}resource/variable/_photo.pkl"):
     pickle.dump([], open(f"{path_depth}resource/variable/_photo.pkl", "wb"))
 
 
-# In[23]:
+# In[9]:
 
 
 if not os.path.exists(f"{path_depth}resource/variable/_threshold.pkl"):
     pickle.dump(70, open(f"{path_depth}resource/variable/_threshold.pkl", "wb"))
 
 
-# In[8]:
+# In[10]:
 
 
 group_name = "database"
@@ -129,7 +122,7 @@ face_names = face_db.read_face_names(group_name)
 threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "rb"))
 
 
-# In[9]:
+# In[11]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -137,7 +130,7 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[10]:
+# In[12]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -148,7 +141,7 @@ def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{pat
     return response.json()
 
 
-# In[11]:
+# In[13]:
 
 
 cap = []
@@ -289,7 +282,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[12]:
+# In[14]:
 
 
 cap = cv2.VideoCapture(0)

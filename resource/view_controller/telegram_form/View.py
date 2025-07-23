@@ -177,7 +177,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Token : "))
         self.label_6.setText(_translate("MainWindow", "Chat ID : "))
         self.pushButton_delete.setText(_translate("MainWindow", "X"))
-        self.pushButton_add.setText(_translate("MainWindow", "Add"))
+        self.pushButton_add.setText(_translate("MainWindow", " Add"))
 
 
 if __name__ == "__main__":

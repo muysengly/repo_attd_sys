@@ -87,7 +87,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -112,6 +112,10 @@ win.tableWidget.setColumnWidth(2, 100)
 win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 win.pushButton_query.setIcon(QIcon(f"{path_depth}resource/asset/data-searching.png"))
 win.pushButton_save.setIcon(QIcon(f"{path_depth}resource/asset/diskette.png"))
+
+
+win.pushButton_clear.setText(" Clear")
+win.pushButton_clear.setIcon(QIcon(f"{path_depth}resource/asset/clear.png"))
 
 
 

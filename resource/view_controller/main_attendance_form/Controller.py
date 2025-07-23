@@ -84,35 +84,25 @@ fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/u
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 
 
-# In[ ]:
+# In[6]:
 
+
+# initialize variables
 
 if not os.path.exists(f"{path_depth}resource/variable/_token.pkl"):
     pickle.dump([], open(f"{path_depth}resource/variable/_token.pkl", "wb"))
 
-
-# In[ ]:
-
-
 if not os.path.exists(f"{path_depth}resource/variable/_chat_id.pkl"):
     pickle.dump([], open(f"{path_depth}resource/variable/_chat_id.pkl", "wb"))
 
-
-# In[8]:
-
-
 if not os.path.exists(f"{path_depth}resource/variable/_photo.pkl"):
     pickle.dump([], open(f"{path_depth}resource/variable/_photo.pkl", "wb"))
-
-
-# In[9]:
-
 
 if not os.path.exists(f"{path_depth}resource/variable/_threshold.pkl"):
     pickle.dump(70, open(f"{path_depth}resource/variable/_threshold.pkl", "wb"))
 
 
-# In[10]:
+# In[7]:
 
 
 group_name = "database"
@@ -122,7 +112,7 @@ face_names = face_db.read_face_names(group_name)
 threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "rb"))
 
 
-# In[11]:
+# In[8]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -130,7 +120,7 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[12]:
+# In[9]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -141,7 +131,7 @@ def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{pat
     return response.json()
 
 
-# In[13]:
+# In[10]:
 
 
 cap = []
@@ -184,10 +174,10 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
     def dateEvent(self):
-        self.label_date.setText(dt.now().strftime("Date: %Y-%m-%d"))
+        self.label_date.setText(dt.now().strftime("%Y-%m-%d"))
 
     def clockEvent(self):
-        self.label_clock.setText(dt.now().strftime("Time: %H:%M:%S"))
+        self.label_clock.setText(dt.now().strftime("%H:%M:%S"))
 
     def paintEvent(self, event):
         global cap
@@ -282,7 +272,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[14]:
+# In[ ]:
 
 
 cap = cv2.VideoCapture(0)
@@ -295,6 +285,19 @@ win.spinBox_threshold.setValue(threshold)
 version_string = open(path_depth + "resource/variable/_version.txt", "r").read().strip()
 version_int = list(map(int, version_string.split(".")))
 win.label_version.setText(f"{version_string}")
+
+
+win.pushButton_telegram.setText(" Telegram")
+win.pushButton_telegram.setIcon(QIcon(f"{path_depth}resource/asset/telegram.png"))
+
+win.pushButton_query.setText(" Query")
+win.pushButton_query.setIcon(QIcon(f"{path_depth}resource/asset/query.png"))
+
+win.pushButton_update.setText(" Update")
+win.pushButton_update.setIcon(QIcon(f"{path_depth}resource/asset/update.png"))
+
+win.pushButton_register.setText(" Register")
+win.pushButton_register.setIcon(QIcon(f"{path_depth}resource/asset/register.png"))
 
 
 

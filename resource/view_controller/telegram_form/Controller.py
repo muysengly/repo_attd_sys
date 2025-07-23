@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[8]:
+# In[1]:
 
 
 # TODO: 
@@ -12,7 +12,7 @@
 # - 
 
 
-# In[9]:
+# In[2]:
 
 
 import os
@@ -49,7 +49,7 @@ else:
 # os.environ["NO_ALBUMENTATIONS_UPDATE"] = "0"
 
 
-# In[10]:
+# In[3]:
 
 
 from View import Ui_MainWindow
@@ -61,14 +61,14 @@ from PyQt5.QtWidgets import *
 import pickle
 
 
-# In[11]:
+# In[4]:
 
 
 token = pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))
 print(f"Token: {token}")
 
 
-# In[12]:
+# In[5]:
 
 
 # chat_id = ["fasdf", "asdfsadf"]
@@ -78,7 +78,7 @@ chat_id = pickle.load(open(f"{path_depth}resource/variable/_chat_id.pkl", "rb"))
 print(f"Chat ID: {chat_id}")
 
 
-# In[6]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -86,8 +86,8 @@ class Window(Ui_MainWindow, QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
-        self.setWindowTitle("Template Form")
+        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/my_logo.png"))
+        self.setWindowTitle("Telegram Form")
 
         self.listView_chat_id.setModel(QStringListModel(chat_id))
 
@@ -105,6 +105,18 @@ win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 
 win.pushButton_delete.setText("")
 win.pushButton_delete.setIcon(QIcon(f"{path_depth}resource/asset/delete.png"))
+# win.pushButton_delete.setStyleSheet("""
+#     QPushButton {
+#         background-color: #ffcccc;
+#         border: 1px solid #ff6666;
+#         border-radius: 6px;
+#         padding: 6px;
+#     }
+#     QPushButton:hover {
+#         background-color: #ff9999;
+#         border: 1.5px solid #ff3333;
+#     }
+# """)
 
 win.pushButton_add.setIcon(QIcon(f"{path_depth}resource/asset/add.png"))
 

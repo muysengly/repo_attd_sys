@@ -13,3 +13,7 @@ database.sqlite
 z-*.py
 
 resource/utility/models/buffalo_sc.zip
+
+
+**/*.ipynb
+**/*.ui

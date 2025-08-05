@@ -28,25 +28,11 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
+
 if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
-elif os.name == "posix":  # POSIX: Portable Operating System Interface
-    if "darwin" in os.sys.platform:
-        pass  # macOS system
-    else:
-        os.environ["DISPLAY"] = ":0"  # Set display
-        os.environ["QT_QPA_PLATFORM"] = "eglfs"  # Set platform for Qt
-        # pass # Linux system
-else:
-    pass  # Other OS
-
-
-# os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0"
-# os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
-# os.environ["QT_SCALE_FACTOR"] = "0"
-# os.environ["NO_ALBUMENTATIONS_UPDATE"] = "0"
 
 
 # In[3]:
@@ -86,8 +72,10 @@ class Window(Ui_MainWindow, QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/my_logo.png"))
+        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Telegram Form")
+        self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
+        self.showFullScreen()
 
         self.listView_chat_id.setModel(QStringListModel(chat_id))
 
@@ -105,18 +93,7 @@ win.pushButton_back.setIcon(QIcon(f"{path_depth}resource/asset/previous.png"))
 
 win.pushButton_delete.setText("")
 win.pushButton_delete.setIcon(QIcon(f"{path_depth}resource/asset/delete.png"))
-# win.pushButton_delete.setStyleSheet("""
-#     QPushButton {
-#         background-color: #ffcccc;
-#         border: 1px solid #ff6666;
-#         border-radius: 6px;
-#         padding: 6px;
-#     }
-#     QPushButton:hover {
-#         background-color: #ff9999;
-#         border: 1.5px solid #ff3333;
-#     }
-# """)
+
 
 win.pushButton_add.setIcon(QIcon(f"{path_depth}resource/asset/add.png"))
 

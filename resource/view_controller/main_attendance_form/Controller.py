@@ -33,15 +33,6 @@ if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
-elif os.name == "posix":  # POSIX: Portable Operating System Interface
-    if "darwin" in os.sys.platform:
-        pass  # macOS system
-    else:
-        os.environ["DISPLAY"] = ":0"  # Set display
-        os.environ["QT_QPA_PLATFORM"] = "eglfs"  # Set platform for Qt
-        # pass # Linux system
-else:
-    pass  # Other OS
 
 
 # In[3]:
@@ -143,11 +134,12 @@ class Window(Ui_MainWindow, QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/my_logo.png"))
+        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Check Attendance Form")
 
         self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
         self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
+        self.showFullScreen()
 
         self.label_itc_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/itc_logo.png").scaled(self.label_itc_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.label_gtr_logo.setPixmap(QPixmap(f"{path_depth}resource/asset/gtr_logo.png").scaled(self.label_gtr_logo.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
@@ -272,7 +264,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[ ]:
+# In[11]:
 
 
 cap = cv2.VideoCapture(0)
@@ -312,7 +304,8 @@ win.spinBox_threshold.valueChanged.connect(f_threshold_change)
 
 
 def f_register():
-    win.close()
+    global cap
+    win.hide()
     cap.release()
     os.system("python " + path_depth + "resource/view_controller/face_management_form/Controller.py")
     cap.open(0)
@@ -324,7 +317,8 @@ win.pushButton_register.clicked.connect(f_register)
 
 
 def f_query():
-    win.close()
+    global cap
+    win.hide()
     cap.release()
     os.system("python " + path_depth + "resource/view_controller/attendance_database_form/Controller.py")
     cap.open(0)
@@ -334,7 +328,8 @@ win.pushButton_query.clicked.connect(f_query)
 
 
 def goto_telegram():
-    win.close()
+    global cap
+    win.hide()
     cap.release()
     os.system("python " + path_depth + "resource/view_controller/telegram_form/Controller.py")
     cap.open(0)

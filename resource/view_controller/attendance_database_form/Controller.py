@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -33,18 +33,9 @@ if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
-elif os.name == "posix":  # POSIX: Portable Operating System Interface
-    if "darwin" in os.sys.platform:
-        pass  # macOS system
-    else:
-        os.environ["DISPLAY"] = ":0"  # Set display
-        os.environ["QT_QPA_PLATFORM"] = "eglfs"  # Set platform for Qt
-        # pass # Linux system
-else:
-    pass  # Other OS
 
 
-# In[3]:
+# In[ ]:
 
 
 from View import Ui_MainWindow
@@ -58,7 +49,7 @@ import csv
 from datetime import datetime as dt
 
 
-# In[4]:
+# In[ ]:
 
 
 from AttendanceDatabase import AttendanceDatabase
@@ -69,7 +60,7 @@ att_db = AttendanceDatabase(path_depth + "attendance.sqlite")
 group_name = "database"
 
 
-# In[5]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -83,6 +74,7 @@ class Window(Ui_MainWindow, QMainWindow):
 
         self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
         self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
+        self.showFullScreen()
 
         self.show()
 

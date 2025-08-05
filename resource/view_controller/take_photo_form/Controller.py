@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -33,18 +33,9 @@ if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
-elif os.name == "posix":  # POSIX: Portable Operating System Interface
-    if "darwin" in os.sys.platform:
-        pass  # macOS system
-    else:
-        os.environ["DISPLAY"] = ":0"  # Set display
-        os.environ["QT_QPA_PLATFORM"] = "eglfs"  # Set platform for Qt
-        # pass # Linux system
-else:
-    pass  # Other OS
 
 
-# In[3]:
+# In[ ]:
 
 
 from insightface.app import FaceAnalysis
@@ -61,14 +52,14 @@ import pickle
 import numpy as np
 
 
-# In[4]:
+# In[ ]:
 
 
 fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 
 
-# In[5]:
+# In[ ]:
 
 
 cap = cv2.VideoCapture(0)
@@ -92,6 +83,7 @@ class Window(Ui_MainWindow, QMainWindow):
 
         self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
         self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
+        self.showFullScreen()
 
         self.show()
 
@@ -135,7 +127,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_camera.setPixmap(q_pixmap)
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])

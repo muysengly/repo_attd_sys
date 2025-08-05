@@ -12,7 +12,7 @@
 # -
 
 
-# In[2]:
+# In[12]:
 
 
 import os
@@ -264,7 +264,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[11]:
+# In[ ]:
 
 
 cap = cv2.VideoCapture(0)
@@ -303,13 +303,36 @@ win.spinBox_threshold.valueChanged.connect(f_threshold_change)
 
 
 
+# def f_register():
+#     global cap
+#     win.hide()
+#     cap.release()
+#     os.system("python " + path_depth + "resource/view_controller/face_management_form/Controller.py")
+#     cap.open(0)
+#     win.show()
+
+
 def f_register():
     global cap
-    win.hide()
-    cap.release()
-    os.system("python " + path_depth + "resource/view_controller/face_management_form/Controller.py")
-    cap.open(0)
-    win.show()
+    try:
+        # Properly release camera resources
+        if cap and cap.isOpened():
+            cap.release()
+
+        # Give time for camera to be fully released
+        import time
+        time.sleep(0.5)
+
+        win.hide()
+
+        # Use subprocess instead of os.system for better process control
+        import subprocess
+        result = subprocess.run([
+            "python", 
+            path_depth + "resource/view_controller/face_management_form/Controller.py"
+        ], capture_output=False, text=True)
+    except Exception as e:
+        print(f"Error in f_register: {e}")
 
 
 

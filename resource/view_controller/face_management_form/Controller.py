@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[3]:
 
 
 import os
@@ -33,12 +33,25 @@ if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
+    # pass  # Windows system
+elif os.name == "posix":  # POSIX: Portable Operating System Interface
+    if "darwin" in os.sys.platform:
+        pass  # macOS system
+    else:
+        # os.environ["DISPLAY"] = ":0"  # Set display
+        # os.environ["QT_QPA_PLATFORM"] = "wayland"  # Set platform for Qt
+        pass # Linux system
+else:
+    pass  # Other OS
 
 
 # In[ ]:
 
 
-from insightface.app import FaceAnalysis  # NOTE: this library need to import first
+# from insightface.app import FaceAnalysis  # NOTE: this library need to import first
+
+
+from FaceModel import fa
 
 from View import Ui_MainWindow
 
@@ -49,9 +62,10 @@ from PyQt5.QtWidgets import *
 import cv2
 import pickle
 import numpy as np
+import subprocess
 
 
-# In[ ]:
+# In[4]:
 
 
 from Database import DataBase
@@ -59,14 +73,14 @@ from Database import DataBase
 db = DataBase(path_depth + "database.sqlite")
 
 
-# In[ ]:
+# In[5]:
 
 
-fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
-fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
+# fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
+# fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 
 
-# In[ ]:
+# In[6]:
 
 
 def is_ascii(text):
@@ -77,7 +91,7 @@ def is_ascii(text):
         return False
 
 
-# In[ ]:
+# In[7]:
 
 
 group_name = "database"
@@ -85,7 +99,7 @@ face_names = db.read_face_names(group_name)
 face_names
 
 
-# In[ ]:
+# In[8]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -347,7 +361,7 @@ def on_button_take_photo_1_clicked():
 
     if win.listView_name.selectedIndexes():
         selected = win.listView_name.selectedIndexes()[0]
-        win.hide()
+        # win.hide()
 
         pickle.dump(None, open(path_depth + "resource/variable/_photo.pkl", "wb"))
 
@@ -364,7 +378,7 @@ def on_button_take_photo_1_clicked():
 
         pickle.dump(None, open(path_depth + "resource/variable/_photo.pkl", "wb"))
 
-        win.show()
+        # win.show()
 
 
 win.pushButton_take_photo_1.clicked.connect(on_button_take_photo_1_clicked)
@@ -373,7 +387,7 @@ win.pushButton_take_photo_1.clicked.connect(on_button_take_photo_1_clicked)
 def on_button_take_photo_2_clicked():
     if win.listView_name.selectedIndexes():
         selected = win.listView_name.selectedIndexes()[0]
-        win.hide()
+        # win.hide()
 
         pickle.dump(None, open(path_depth + "resource/variable/_photo.pkl", "wb"))
 
@@ -392,7 +406,7 @@ def on_button_take_photo_2_clicked():
 
         pickle.dump(None, open(path_depth + "resource/variable/_photo.pkl", "wb"))
 
-        win.show()
+        # win.show()
 
 
 win.pushButton_take_photo_2.clicked.connect(on_button_take_photo_2_clicked)
@@ -426,14 +440,12 @@ win.pushButton_clear_image_2.clicked.connect(on_button_clear_image_2_clicked)
 
 
 def on_button_back_clicked():
-    win.close()
+    app.exit()
 
 
 win.pushButton_back.clicked.connect(on_button_back_clicked)
 
 
 app.exec_()
-
-
 app = None
 

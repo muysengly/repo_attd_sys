@@ -21,3 +21,27 @@ pip install -y pyqt5 opencv-python insightface onnxruntime --break-system-packag
 crontab -e
 
 @reboot sleep 10 && DISPLAY=:0 QT_QPA_PLATFORM=eglfs /usr/bin/lxterminal -e "bash -c 'cd /home/pi/repo_attendance_system_gtr-main && sudo /usr/bin/python /home/pi/repo_attendance_system_gtr-main/Main.py; exec bash'"
+
+## Setup Auto Run for Ubuntu
+
+create bash file
+
+run.sh
+
+run autostart
+
+and add run.sh
+
+## Install PyQt5 Designer
+
+To install PyQt5 Designer, run:
+
+```bash
+sudo apt-get install -y qttools5-dev-tools
+```
+
+You can then launch Designer with:
+
+```bash
+designer
+```

@@ -3,7 +3,6 @@
 
 import os
 
-# os.chdir("./resource/view_controller/login_form/")
 os.chdir("./resource/view_controller/main_attendance_form/")
 
 os.system("python Controller.py")

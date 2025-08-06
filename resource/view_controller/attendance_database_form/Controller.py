@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[3]:
 
 
 import os
@@ -33,6 +33,16 @@ if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
+    # pass  # Windows system
+elif os.name == "posix":  # POSIX: Portable Operating System Interface
+    if "darwin" in os.sys.platform:
+        pass  # macOS system
+    else:
+        # os.environ["DISPLAY"] = ":0"  # Set display
+        # os.environ["QT_QPA_PLATFORM"] = "wayland"  # Set platform for Qt
+        pass # Linux system
+else:
+    pass  # Other OS
 
 
 # In[ ]:
@@ -49,7 +59,7 @@ import csv
 from datetime import datetime as dt
 
 
-# In[ ]:
+# In[4]:
 
 
 from AttendanceDatabase import AttendanceDatabase
@@ -60,7 +70,7 @@ att_db = AttendanceDatabase(path_depth + "attendance.sqlite")
 group_name = "database"
 
 
-# In[ ]:
+# In[5]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -79,7 +89,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[ ]:
+# In[6]:
 
 
 app = QApplication([])
@@ -170,7 +180,8 @@ win.pushButton_save.clicked.connect(on_button_save_csv_clicked)
 
 
 def on_button_back_clicked():
-    win.close()
+    app.exit()
+    # subprocess.Popen(["python", path_depth + "resource/view_controller/main_attendance_form/Controller.py"])
 
 
 win.pushButton_back.clicked.connect(on_button_back_clicked)

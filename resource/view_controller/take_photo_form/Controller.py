@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # TODO:
@@ -12,7 +12,7 @@
 # -
 
 
-# In[ ]:
+# In[3]:
 
 
 import os
@@ -33,12 +33,24 @@ if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
+    # pass  # Windows system
+elif os.name == "posix":  # POSIX: Portable Operating System Interface
+    if "darwin" in os.sys.platform:
+        pass  # macOS system
+    else:
+        # os.environ["DISPLAY"] = ":0"  # Set display
+        # os.environ["QT_QPA_PLATFORM"] = "wayland"  # Set platform for Qt
+        pass # Linux system
+else:
+    pass  # Other OS
 
 
 # In[ ]:
 
 
-from insightface.app import FaceAnalysis
+# from insightface.app import FaceAnalysis
+
+from FaceModel import fa
 
 from View import Ui_MainWindow
 
@@ -50,16 +62,17 @@ from PyQt5.QtWidgets import *
 import cv2
 import pickle
 import numpy as np
+# import subprocess
 
 
-# In[ ]:
+# In[4]:
 
 
-fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
-fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
+# fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
+# fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 
 
-# In[ ]:
+# In[5]:
 
 
 cap = cv2.VideoCapture(0)
@@ -70,7 +83,7 @@ class Window(Ui_MainWindow, QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
-        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/my_logo.png"))
+        self.setWindowIcon(QIcon(f"{path_depth}resource/asset/itc_logo.png"))
         self.setWindowTitle("Take Photo Form")
 
         self.faces = []
@@ -127,7 +140,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_camera.setPixmap(q_pixmap)
 
 
-# In[ ]:
+# In[6]:
 
 
 app = QApplication([])
@@ -144,20 +157,24 @@ def take_photo():
     image = np.array(frame)
     pickle.dump(image, open(path_depth + "resource/variable/_photo.pkl", "wb"))
 
-    win.close()
+    # win.close()
+    app.exit()
 
 
 win.pushButton_take_photo.clicked.connect(take_photo)
 
 
 def on_button_back_clicked():
-    win.close()
+    # win.close()
+    app.exit()
+
 
 
 win.pushButton_back.clicked.connect(on_button_back_clicked)
 
 
 app.exec_()
+app.exit()
 app = None
 cap.release()
 

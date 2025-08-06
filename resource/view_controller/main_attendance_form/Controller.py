@@ -33,12 +33,22 @@ if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
+    # pass  # Windows system
+elif os.name == "posix":  # POSIX: Portable Operating System Interface
+    if "darwin" in os.sys.platform:
+        pass  # macOS system
+    else:
+        # os.environ["DISPLAY"] = ":0"  # Set display
+        # os.environ["QT_QPA_PLATFORM"] = "wayland"  # Set platform for Qt
+        pass # Linux system
+else:
+    pass  # Other OS
 
 
 # In[3]:
 
 
-from insightface.app import FaceAnalysis
+from FaceModel import fa
 
 from View import Ui_MainWindow
 
@@ -50,6 +60,7 @@ import cv2
 import pickle
 import zipfile
 import requests
+import subprocess
 import numpy as np
 
 
@@ -71,13 +82,6 @@ attd_db = AttendanceDatabase(path_depth + "attendance.sqlite")
 # In[5]:
 
 
-fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
-fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
-
-
-# In[6]:
-
-
 # initialize variables
 
 if not os.path.exists(f"{path_depth}resource/variable/_token.pkl"):
@@ -93,7 +97,7 @@ if not os.path.exists(f"{path_depth}resource/variable/_threshold.pkl"):
     pickle.dump(70, open(f"{path_depth}resource/variable/_threshold.pkl", "wb"))
 
 
-# In[7]:
+# In[6]:
 
 
 group_name = "database"
@@ -103,7 +107,7 @@ face_names = face_db.read_face_names(group_name)
 threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "rb"))
 
 
-# In[8]:
+# In[7]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -111,7 +115,7 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[9]:
+# In[8]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -122,7 +126,7 @@ def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{pat
     return response.json()
 
 
-# In[10]:
+# In[9]:
 
 
 cap = []
@@ -291,6 +295,7 @@ win.pushButton_update.setIcon(QIcon(f"{path_depth}resource/asset/update.png"))
 win.pushButton_register.setText(" Register")
 win.pushButton_register.setIcon(QIcon(f"{path_depth}resource/asset/register.png"))
 
+win.pushButton_close.setStyleSheet("background-color: red; color: white;")
 
 
 def f_threshold_change():
@@ -302,64 +307,49 @@ def f_threshold_change():
 win.spinBox_threshold.valueChanged.connect(f_threshold_change)
 
 
-
-# def f_register():
-#     global cap
-#     win.hide()
-#     cap.release()
-#     os.system("python " + path_depth + "resource/view_controller/face_management_form/Controller.py")
-#     cap.open(0)
-#     win.show()
-
-
 def f_register():
-    global cap
-    try:
-        # Properly release camera resources
-        if cap and cap.isOpened():
-            cap.release()
-
-        # Give time for camera to be fully released
-        import time
-        time.sleep(0.5)
-
-        win.hide()
-
-        # Use subprocess instead of os.system for better process control
-        import subprocess
-        result = subprocess.run([
-            "python", 
-            path_depth + "resource/view_controller/face_management_form/Controller.py"
-        ], capture_output=False, text=True)
-    except Exception as e:
-        print(f"Error in f_register: {e}")
-
+    # app.exit()
+    # subprocess.Popen(["python", path_depth + "resource/view_controller/face_management_form/Controller.py"])
+    # global cap
+    # win.hide()
+    # win.showMinimized()
+    cap.release()
+    os.system("python " + path_depth + "resource/view_controller/face_management_form/Controller.py")
+    cap.open(0)
+    # win.show()
 
 
 win.pushButton_register.clicked.connect(f_register)
 
 
 def f_query():
-    global cap
-    win.hide()
+    # app.exit()
+    # subprocess.Popen(["python", path_depth + "resource/view_controller/attendance_database_form/Controller.py"])
+    # global cap
+    # win.hide()
     cap.release()
     os.system("python " + path_depth + "resource/view_controller/attendance_database_form/Controller.py")
     cap.open(0)
-    win.show()
+    # win.show()
+
 
 win.pushButton_query.clicked.connect(f_query)
 
 
 def goto_telegram():
-    global cap
-    win.hide()
+    # app.exit()
+    # subprocess.Popen(["python", path_depth + "resource/view_controller/telegram_form/Controller.py"])
+    # global cap
+    # win.hide()
     cap.release()
     os.system("python " + path_depth + "resource/view_controller/telegram_form/Controller.py")
     cap.open(0)
-    win.show()
+    # win.show()
+
+
+
 
 win.pushButton_telegram.clicked.connect(goto_telegram)
-
 
 
 def f_update():
@@ -386,7 +376,7 @@ def f_update():
                     progress.setWindowTitle("Update in progress")
                     progress.setValue(0)
                     downloaded = 0
-                    with open("tmp.zip", "wb") as f:
+                    with open(f"{path_depth}tmp.zip", "wb") as f:
                         for data in response.iter_content(1024):
                             if progress.wasCanceled():
                                 response.close()
@@ -399,9 +389,11 @@ def f_update():
                     progress.setValue(100)
 
                     # extract the downloaded zip file
-                    with zipfile.ZipFile("tmp.zip", "r") as zip_ref:
-                        pass # TODO: extract to linux
-                        # zip_ref.extractall("c:\\")
+                    with zipfile.ZipFile(f"{path_depth}tmp.zip", "r") as zip_ref:
+                        # TODO: unzip the file to the correct location
+                        zip_ref.extractall(os.path.expanduser("~"))
+                        os.remove(f"{path_depth}tmp.zip")
+
 
                     # show message box to inform the user
                     QMessageBox.information(win, "Update Complete", f"Updated to version {git_version_string}. \nPlease restart the application.")
@@ -419,7 +411,25 @@ win.pushButton_update.clicked.connect(f_update)
 win.pushButton_update.deleteLater()
 
 
+def f_close():
+    global cap
+    reply = QMessageBox.question(win, "Exit", "Are you sure you want to exit?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+    if reply == QMessageBox.Yes:
+        # cap.release()
+        # win.close()
+        app.quit()
+
+
+win.pushButton_close.clicked.connect(f_close)
+
+
 app.exec_()
 app = None
 cap.release()
+
+
+# In[13]:
+
+
+os.getcwd()
 

@@ -12,7 +12,7 @@
 # -
 
 
-# In[12]:
+# In[2]:
 
 
 import os
@@ -76,7 +76,8 @@ face_db = DataBase(path_depth + "database.sqlite")
 
 from AttendanceDatabase import AttendanceDatabase
 
-attd_db = AttendanceDatabase(path_depth + "attendance.sqlite")
+# attd_db = AttendanceDatabase(path_depth + "attendance.sqlite")
+attd_db = AttendanceDatabase(path_depth + "database.sqlite")
 
 
 # In[5]:
@@ -126,7 +127,7 @@ def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{pat
     return response.json()
 
 
-# In[9]:
+# In[ ]:
 
 
 cap = []
@@ -268,7 +269,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[ ]:
+# In[10]:
 
 
 cap = cv2.VideoCapture(0)
@@ -347,8 +348,6 @@ def goto_telegram():
     # win.show()
 
 
-
-
 win.pushButton_telegram.clicked.connect(goto_telegram)
 
 
@@ -394,7 +393,6 @@ def f_update():
                         zip_ref.extractall(os.path.expanduser("~"))
                         os.remove(f"{path_depth}tmp.zip")
 
-
                     # show message box to inform the user
                     QMessageBox.information(win, "Update Complete", f"Updated to version {git_version_string}. \nPlease restart the application.")
                 else:
@@ -426,10 +424,4 @@ win.pushButton_close.clicked.connect(f_close)
 app.exec_()
 app = None
 cap.release()
-
-
-# In[13]:
-
-
-os.getcwd()
 

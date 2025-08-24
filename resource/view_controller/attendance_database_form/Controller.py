@@ -12,7 +12,7 @@
 # -
 
 
-# In[3]:
+# In[4]:
 
 
 import os
@@ -59,12 +59,13 @@ import csv
 from datetime import datetime as dt
 
 
-# In[4]:
+# In[ ]:
 
 
 from AttendanceDatabase import AttendanceDatabase
 
-att_db = AttendanceDatabase(path_depth + "attendance.sqlite")
+# att_db = AttendanceDatabase(path_depth + "attendance.sqlite")
+att_db = AttendanceDatabase(path_depth + "database.sqlite")
 
 
 group_name = "database"

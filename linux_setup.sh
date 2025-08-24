@@ -10,9 +10,6 @@ sudo apt upgrade -y
 sudo apt install python3-pip python3-venv python3-opencv python3-pyqt5 build-essential curl -y
 
 
-
-
-
 # change working directory to home directory
 cd ~
 
@@ -40,7 +37,6 @@ unzip tmp.zip
 
 # delete the zip file after extraction
 rm tmp.zip
-
 
 
 ###### run project

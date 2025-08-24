@@ -12,7 +12,7 @@
 # -
 
 
-# In[3]:
+# In[2]:
 
 
 import os
@@ -45,7 +45,7 @@ else:
     pass  # Other OS
 
 
-# In[ ]:
+# In[3]:
 
 
 # from insightface.app import FaceAnalysis  # NOTE: this library need to import first
@@ -96,7 +96,7 @@ def is_ascii(text):
 
 group_name = "database"
 face_names = db.read_face_names(group_name)
-face_names
+# face_names
 
 
 # In[8]:
@@ -113,9 +113,9 @@ class Window(Ui_MainWindow, QMainWindow):
 
         self.listView_name.setModel(QStringListModel(face_names))
 
-        self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
-        self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
-        self.showFullScreen()
+        # self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
+        # self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
+        # self.showFullScreen()
 
         self.show()
 
@@ -157,6 +157,13 @@ def on_button_add_click():
                     index = win.listView_name.model().index(win.listView_name.model().rowCount() - 1)
                     win.listView_name.model().setData(index, text.upper())
                     db.create_face_name(group_name, text.upper())
+
+                    win.listView_name.setCurrentIndex(
+                        win.listView_name.model().index(
+                            win.listView_name.model().rowCount() - 1,
+                            0,
+                        )
+                    )
 
                 else:
                     QMessageBox.warning(win, "Warning", "Name already exists!")
@@ -238,7 +245,10 @@ def on_button_delete_clicked():
     if win.listView_name.selectedIndexes():
 
         selected = win.listView_name.selectedIndexes()[0]
+        # print(selected)
+        index = selected.row()
         name = selected.data()
+        # print(name)
 
         win.listView_name.model().removeRow(selected.row())
         db.delete_face_name(group_name, name)
@@ -250,7 +260,12 @@ def on_button_delete_clicked():
             win.label_image_2.clear()
             win.label_image_2.setText("No data")
         else:
-            win.listView_name.setCurrentIndex(win.listView_name.model().index(0, 0))
+            win.listView_name.setCurrentIndex(
+                win.listView_name.model().index(
+                    index - 1 if index - 1 >= 0 else 0,
+                    0,
+                )
+            )
             on_listview_single_clicked()
 
 

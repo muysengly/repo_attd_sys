@@ -1,21 +1,12 @@
 /.git
 /.vscode
 
-/__sample__
-/**/__pycache__
-/__tmp__
+_*/
 
 /log/*.jpg
-/resource/utility/test
-
-attendance.sqlite
 database.sqlite
-z-*.py
-
+resource/variable/*.pkl
 resource/utility/models/buffalo_sc.zip
-
 
 **/*.ipynb
 **/*.ui
-
-resource/variable/*.pkl

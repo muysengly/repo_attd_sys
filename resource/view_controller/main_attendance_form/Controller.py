@@ -29,12 +29,12 @@ elif os.name == "posix":  # POSIX: Portable Operating System Interface
     else:
         # os.environ["DISPLAY"] = ":0"  # Set display
         # os.environ["QT_QPA_PLATFORM"] = "wayland"  # Set platform for Qt
-        pass # Linux system
+        pass  # Linux system
 else:
     pass  # Other OS
 
 
-# In[ ]:
+# In[2]:
 
 
 from FaceModel import fa
@@ -59,6 +59,14 @@ from datetime import datetime as dt
 # In[ ]:
 
 
+log_folder = os.path.join(path_depth, "log")
+if not os.path.exists(log_folder):
+    os.makedirs(log_folder)
+
+
+# In[3]:
+
+
 from FaceDatabase import FaceDataBase
 
 face_database = FaceDataBase(path_depth + "database.sqlite")
@@ -69,7 +77,7 @@ from AttendanceDatabase import AttendanceDatabase
 attd_database = AttendanceDatabase(path_depth + "database.sqlite")
 
 
-# In[ ]:
+# In[4]:
 
 
 # initialize variables
@@ -87,7 +95,7 @@ if not os.path.exists(f"{path_depth}resource/variable/_threshold.pkl"):
     pickle.dump(70, open(f"{path_depth}resource/variable/_threshold.pkl", "wb"))
 
 
-# In[ ]:
+# In[5]:
 
 
 table_name = "table_face"
@@ -97,7 +105,7 @@ face_names = face_database.read_face_names(table_name)
 threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "rb"))
 
 
-# In[ ]:
+# In[6]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -105,7 +113,7 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[ ]:
+# In[7]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -116,7 +124,7 @@ def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{pat
     return response.json()
 
 
-# In[ ]:
+# In[8]:
 
 
 cap = []
@@ -258,7 +266,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[ ]:
+# In[9]:
 
 
 cap = cv2.VideoCapture(0)

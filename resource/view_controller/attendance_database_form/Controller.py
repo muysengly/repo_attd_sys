@@ -12,7 +12,7 @@
 # -
 
 
-# In[4]:
+# In[2]:
 
 
 import os
@@ -45,7 +45,7 @@ else:
     pass  # Other OS
 
 
-# In[ ]:
+# In[3]:
 
 
 from View import Ui_MainWindow
@@ -59,7 +59,7 @@ import csv
 from datetime import datetime as dt
 
 
-# In[ ]:
+# In[4]:
 
 
 from AttendanceDatabase import AttendanceDatabase
@@ -68,7 +68,7 @@ from AttendanceDatabase import AttendanceDatabase
 att_db = AttendanceDatabase(path_depth + "database.sqlite")
 
 
-group_name = "database"
+group_name = "table_face"
 
 
 # In[5]:
@@ -132,7 +132,7 @@ def on_button_query_clicked():
     end_date = win.dateEdit_end_date.date().toString("yyyy-MM-dd")
     end_time = win.timeEdit_end_time.time().toString("HH:mm:ss")
 
-    data = att_db.read_data(group_name, start_date, start_time, end_date, end_time)
+    data = att_db.read_data(start_date, start_time, end_date, end_time)
 
     win.tableWidget.setRowCount(len(data))
     for i, row in enumerate(data):

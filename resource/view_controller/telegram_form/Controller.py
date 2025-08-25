@@ -4,17 +4,6 @@
 # In[1]:
 
 
-# TODO: 
-# - 
-# - 
-# - 
-# - 
-# - 
-
-
-# In[3]:
-
-
 import os
 import sys
 

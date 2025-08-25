@@ -3,13 +3,13 @@ import sqlite3
 import numpy as np
 
 
-class DataBase:
+class FaceDataBase:
 
     ####################____________________####################
     def __init__(self, db_name):
         self.conn = sqlite3.connect(db_name)
         # create defult table if it does not exist
-        self.create_table("database")
+        self.create_table("table_face")
         print("Database connected!")
 
     def close(self):
@@ -22,11 +22,13 @@ class DataBase:
         self.conn.execute(
             f"""
                 CREATE TABLE IF NOT EXISTS '{table_name}' (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL UNIQUE,
                 img_1 BLOB,
                 emb_1 BLOB,
                 img_2 BLOB,
-                emb_2 BLOB
+                emb_2 BLOB,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
             """
         )
@@ -80,8 +82,10 @@ class DataBase:
 
     def read_image_1(self, table_name, face_name):
         cursor = self.conn.execute(f"SELECT img_1 FROM '{table_name}' WHERE name = ?;", (face_name,))
-        img_blob = cursor.fetchone()[0]
-        if img_blob:
+
+        result = cursor.fetchone()
+        if result and result[0]:
+            img_blob = result[0]
             img = cv2.imdecode(np.frombuffer(img_blob, np.uint8), cv2.IMREAD_COLOR)
             return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         return None
@@ -161,8 +165,9 @@ class DataBase:
 
     def read_image_2(self, table_name, face_name):
         cursor = self.conn.execute(f"SELECT img_2 FROM '{table_name}' WHERE name = ?;", (face_name,))
-        img_blob = cursor.fetchone()[0]
-        if img_blob:
+        result = cursor.fetchone()
+        if result and result[0]:
+            img_blob = result[0]
             img = cv2.imdecode(np.frombuffer(img_blob, np.uint8), cv2.IMREAD_COLOR)
             return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         return None

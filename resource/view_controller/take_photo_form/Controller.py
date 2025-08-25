@@ -12,7 +12,7 @@
 # -
 
 
-# In[4]:
+# In[ ]:
 
 
 import os
@@ -45,7 +45,7 @@ else:
     pass  # Other OS
 
 
-# In[ ]:
+# In[3]:
 
 
 # from insightface.app import FaceAnalysis

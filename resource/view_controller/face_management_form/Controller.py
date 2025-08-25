@@ -4,17 +4,6 @@
 # In[1]:
 
 
-# TODO:
-# -
-# -
-# -
-# -
-# -
-
-
-# In[2]:
-
-
 import os
 import sys
 
@@ -45,13 +34,10 @@ else:
     pass  # Other OS
 
 
-# In[3]:
+# In[2]:
 
 
-# from insightface.app import FaceAnalysis  # NOTE: this library need to import first
-
-
-from FaceModel import fa
+from FaceModel import fa  # NOTE: this library need to import first
 
 from View import Ui_MainWindow
 
@@ -65,22 +51,15 @@ import numpy as np
 import subprocess
 
 
+# In[3]:
+
+
+from FaceDatabase import FaceDataBase
+
+database_face = FaceDataBase(path_depth + "database.sqlite")
+
+
 # In[4]:
-
-
-from Database import DataBase
-
-db = DataBase(path_depth + "database.sqlite")
-
-
-# In[5]:
-
-
-# fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
-# fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
-
-
-# In[6]:
 
 
 def is_ascii(text):
@@ -91,15 +70,14 @@ def is_ascii(text):
         return False
 
 
-# In[7]:
+# In[5]:
 
 
-group_name = "database"
-face_names = db.read_face_names(group_name)
-# face_names
+table_name = "table_face"
+face_names = database_face.read_face_names(table_name)
 
 
-# In[8]:
+# In[6]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -113,14 +91,14 @@ class Window(Ui_MainWindow, QMainWindow):
 
         self.listView_name.setModel(QStringListModel(face_names))
 
-        # self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
-        # self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
-        # self.showFullScreen()
+        self.setWindowFlags(self.windowFlags() | Qt.WindowMaximizeButtonHint)
+        self.setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX)
+        self.showFullScreen()
 
         self.show()
 
 
-# In[ ]:
+# In[7]:
 
 
 app = QApplication([])
@@ -152,18 +130,12 @@ def on_button_add_click():
         if text.strip() != "":
             if is_ascii(text):
                 text = text.strip()
-                if text.upper() not in db.read_face_names(group_name):
+                if text.upper() not in database_face.read_face_names(table_name):
                     win.listView_name.model().insertRow(win.listView_name.model().rowCount())
                     index = win.listView_name.model().index(win.listView_name.model().rowCount() - 1)
                     win.listView_name.model().setData(index, text.upper())
-                    db.create_face_name(group_name, text.upper())
-
-                    win.listView_name.setCurrentIndex(
-                        win.listView_name.model().index(
-                            win.listView_name.model().rowCount() - 1,
-                            0,
-                        )
-                    )
+                    win.listView_name.setCurrentIndex(win.listView_name.model().index(win.listView_name.model().rowCount() - 1, 0))
+                    database_face.create_face_name(table_name, text.upper())
 
                 else:
                     QMessageBox.warning(win, "Warning", "Name already exists!")
@@ -198,15 +170,15 @@ def on_listview_data_changed():
 
         if selected.data().strip() == "":
             win.listView_name.model().removeRow(selected.row())
-            db.delete_face_name(group_name, _name)
+            database_face.delete_face_name(table_name, _name)
 
-        elif selected.data().strip().upper() in db.read_face_names(group_name) and selected.data().strip() != _name:
+        elif selected.data().strip().upper() in database_face.read_face_names(table_name) and selected.data().strip() != _name:
             QMessageBox.warning(win, "Warning", "Name already exists!")
             win.listView_name.model().setData(selected, _name)
 
         elif selected.data().upper() != _name:
             win.listView_name.model().setData(selected, selected.data().strip().upper())
-            db.update_face_name(group_name, _name, selected.data().strip().upper())
+            database_face.update_face_name(table_name, _name, selected.data().strip().upper())
 
 
 win.listView_name.model().dataChanged.connect(on_listview_data_changed)
@@ -216,7 +188,7 @@ def on_listview_single_clicked():
     if win.listView_name.selectedIndexes():
         selected = win.listView_name.selectedIndexes()[0]
 
-        img_1 = db.read_image_1(group_name, selected.data())
+        img_1 = database_face.read_image_1(table_name, selected.data())
         if img_1 is not None and len(img_1) > 0:
             img_1 = cv2.resize(img_1, (win.label_image_1.width(), win.label_image_1.height()))
             img_1 = cv2.cvtColor(img_1, cv2.COLOR_BGR2RGB)
@@ -227,7 +199,7 @@ def on_listview_single_clicked():
             win.label_image_1.clear()
             win.label_image_1.setText("No data")
 
-        img_2 = db.read_image_2(group_name, selected.data())
+        img_2 = database_face.read_image_2(table_name, selected.data())
         if img_2 is not None and len(img_2) > 0:
             img_2 = cv2.resize(img_2, (win.label_image_2.width(), win.label_image_2.height()))
             img_2 = cv2.cvtColor(img_2, cv2.COLOR_BGR2RGB)
@@ -251,21 +223,16 @@ def on_button_delete_clicked():
         # print(name)
 
         win.listView_name.model().removeRow(selected.row())
-        db.delete_face_name(group_name, name)
+        database_face.delete_face_name(table_name, name)
 
         # Clear images if no data left
-        if len(db.read_face_names(group_name)) == 0:
+        if len(database_face.read_face_names(table_name)) == 0:
             win.label_image_1.clear()
             win.label_image_1.setText("No data")
             win.label_image_2.clear()
             win.label_image_2.setText("No data")
         else:
-            win.listView_name.setCurrentIndex(
-                win.listView_name.model().index(
-                    index - 1 if index - 1 >= 0 else 0,
-                    0,
-                )
-            )
+            win.listView_name.setCurrentIndex(win.listView_name.model().index(index - 1 if index - 1 >= 0 else 0, 0))
             on_listview_single_clicked()
 
 
@@ -287,8 +254,8 @@ def on_button_upload_image_1_clicked():
                 face = faces[0]
                 box = face.bbox.astype(int)
                 if (box[2] - box[0]) > 160 or (box[3] - box[1]) > 160:
-                    db.create_image_1_from_path(group_name, selected.data(), file_name)
-                    db.create_emb_1(group_name, selected.data(), faces[0].embedding)
+                    database_face.create_image_1_from_path(table_name, selected.data(), file_name)
+                    database_face.create_emb_1(table_name, selected.data(), faces[0].embedding)
 
                     _image = cv2.resize(image, (win.label_image_1.width(), win.label_image_1.height()))
                     q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
@@ -337,8 +304,8 @@ def on_button_upload_image_2_clicked():
                 box = face.bbox.astype(int)
                 if (box[2] - box[0]) > 160 or (box[3] - box[1]) > 160:
 
-                    db.create_image_2_from_path(group_name, selected.data(), file_name)
-                    db.create_emb_2(group_name, selected.data(), faces[0].embedding)
+                    database_face.create_image_2_from_path(table_name, selected.data(), file_name)
+                    database_face.create_emb_2(table_name, selected.data(), faces[0].embedding)
 
                     _image = cv2.resize(image, (win.label_image_2.width(), win.label_image_2.height()))
                     q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
@@ -385,8 +352,8 @@ def on_button_take_photo_1_clicked():
         photo = pickle.load(open(path_depth + "resource/variable/_photo.pkl", "rb"))
 
         if photo is not None:
-            db.create_image_1_from_array(group_name, selected.data(), photo)
-            db.create_emb_1(group_name, selected.data(), fa.get(photo)[0].embedding)
+            database_face.create_image_1_from_array(table_name, selected.data(), photo)
+            database_face.create_emb_1(table_name, selected.data(), fa.get(photo)[0].embedding)
             _image = cv2.resize(photo, (win.label_image_1.width(), win.label_image_1.height()))
             q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
             win.label_image_1.setPixmap(q_pixmap)
@@ -412,8 +379,8 @@ def on_button_take_photo_2_clicked():
 
         if photo is not None:
 
-            db.create_image_2_from_array(group_name, selected.data(), photo)
-            db.create_emb_2(group_name, selected.data(), fa.get(photo)[0].embedding)
+            database_face.create_image_2_from_array(table_name, selected.data(), photo)
+            database_face.create_emb_2(table_name, selected.data(), fa.get(photo)[0].embedding)
 
             _image = cv2.resize(photo, (win.label_image_2.width(), win.label_image_2.height()))
             q_pixmap = QPixmap.fromImage(QImage(cv2.cvtColor(_image, cv2.COLOR_BGR2RGB).data, _image.shape[1], _image.shape[0], QImage.Format.Format_RGB888))
@@ -433,8 +400,8 @@ def on_button_clear_image_1_clicked():
         win.label_image_1.clear()
         win.label_image_1.setText("No data")
 
-        db.delete_image_1(group_name, selected.data())
-        db.delete_emb_1(group_name, selected.data())
+        database_face.delete_image_1(table_name, selected.data())
+        database_face.delete_emb_1(table_name, selected.data())
 
 
 win.pushButton_clear_image_1.clicked.connect(on_button_clear_image_1_clicked)
@@ -447,8 +414,8 @@ def on_button_clear_image_2_clicked():
         win.label_image_2.clear()
         win.label_image_2.setText("No data")
 
-        db.delete_image_2(group_name, selected.data())
-        db.delete_emb_2(group_name, selected.data())
+        database_face.delete_image_2(table_name, selected.data())
+        database_face.delete_emb_2(table_name, selected.data())
 
 
 win.pushButton_clear_image_2.clicked.connect(on_button_clear_image_2_clicked)

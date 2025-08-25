@@ -1,18 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
-# TODO:
-# -
-# -
-# -
-# -
-# -
-
-
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -45,7 +34,7 @@ else:
     pass  # Other OS
 
 
-# In[3]:
+# In[ ]:
 
 
 from FaceModel import fa
@@ -67,20 +56,20 @@ import numpy as np
 from datetime import datetime as dt
 
 
-# In[4]:
+# In[ ]:
 
 
-from Database import DataBase
+from FaceDatabase import FaceDataBase
 
-face_db = DataBase(path_depth + "database.sqlite")
+face_database = FaceDataBase(path_depth + "database.sqlite")
 
 from AttendanceDatabase import AttendanceDatabase
 
 # attd_db = AttendanceDatabase(path_depth + "attendance.sqlite")
-attd_db = AttendanceDatabase(path_depth + "database.sqlite")
+attd_database = AttendanceDatabase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 # initialize variables
@@ -98,17 +87,17 @@ if not os.path.exists(f"{path_depth}resource/variable/_threshold.pkl"):
     pickle.dump(70, open(f"{path_depth}resource/variable/_threshold.pkl", "wb"))
 
 
-# In[6]:
+# In[ ]:
 
 
-group_name = "database"
+table_name = "table_face"
 
-face_names = face_db.read_face_names(group_name)
+face_names = face_database.read_face_names(table_name)
 
 threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "rb"))
 
 
-# In[7]:
+# In[ ]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -116,7 +105,7 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[8]:
+# In[ ]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -156,7 +145,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.SKIP_FRAMES = 10
         self.frame_count = 0
         self.attd_timestamps = {}
-        self.database = face_db.read_name_emb1_emb2(group_name)
+        self.database = face_database.read_name_emb1_emb2(table_name)
 
         self.clockEvent()  # set initial clock
         self.clock = QTimer(self)
@@ -190,7 +179,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.frame_count += 1
             if self.frame_count % self.SKIP_FRAMES == 0:
                 self.frame_count = 0
-                self.database = face_db.read_name_emb1_emb2(group_name)
+                self.database = face_database.read_name_emb1_emb2(table_name)
                 self.faces = fa.get(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
             if len(self.faces) > 0:
@@ -244,9 +233,9 @@ class Window(Ui_MainWindow, QMainWindow):
                                 self.attd_timers = {}
                             self.attd_timers[name] = timer
 
-                            attd_db.add_data(group_name, self.database[np.argmax(scores)][0], dt.now().strftime("%Y-%m-%d"), dt.now().strftime("%H:%M:%S"))
+                            attd_database.add_data(self.database[np.argmax(scores)][0], dt.now().strftime("%Y-%m-%d"), dt.now().strftime("%H:%M:%S"))
 
-                            log_path = f"{path_depth}log/log_{group_name}_{self.database[np.argmax(scores)][0]}_{dt.now().strftime('%Y%m%d')}{dt.now().strftime('%H%M%S')}.jpg"
+                            log_path = f"{path_depth}log/log_{table_name}_{self.database[np.argmax(scores)][0]}_{dt.now().strftime('%Y%m%d')}{dt.now().strftime('%H%M%S')}.jpg"
                             cv2.imwrite(log_path, frame)
 
                             # Send Telegram message
@@ -269,7 +258,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[10]:
+# In[ ]:
 
 
 cap = cv2.VideoCapture(0)

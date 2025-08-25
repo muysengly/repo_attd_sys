@@ -1,12 +1,12 @@
 #!/bin/bash
 
 
-# 1. update and upgrade system packages
+# update and upgrade system packages
 sudo apt update
 sudo apt upgrade -y
 
 
-# 2. install necessary packages
+# install necessary packages
 sudo apt install python3-pip python3-venv python3-opencv python3-pyqt5 build-essential curl -y
 
 
@@ -31,16 +31,12 @@ pip install pyqt5 opencv-python insightface onnxruntime
 curl -L -o tmp.zip https://github.com/muysengly/repo_attendance_system_gtr/archive/refs/heads/main.zip
 
 
-# @REM Extract the downloaded zip file
+# Extract the downloaded zip file
 unzip tmp.zip
-
-
-# delete the zip file after extraction
 rm tmp.zip
 
 
 ###### run project
-
 cd ~
 
 # change working directory to the extracted folder

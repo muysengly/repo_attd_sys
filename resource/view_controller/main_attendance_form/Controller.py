@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -56,7 +56,7 @@ import numpy as np
 from datetime import datetime as dt
 
 
-# In[ ]:
+# In[3]:
 
 
 log_folder = os.path.join(path_depth, "log")
@@ -64,7 +64,7 @@ if not os.path.exists(log_folder):
     os.makedirs(log_folder)
 
 
-# In[3]:
+# In[4]:
 
 
 from FaceDatabase import FaceDataBase
@@ -77,7 +77,7 @@ from AttendanceDatabase import AttendanceDatabase
 attd_database = AttendanceDatabase(path_depth + "database.sqlite")
 
 
-# In[4]:
+# In[5]:
 
 
 # initialize variables
@@ -95,7 +95,7 @@ if not os.path.exists(f"{path_depth}resource/variable/_threshold.pkl"):
     pickle.dump(70, open(f"{path_depth}resource/variable/_threshold.pkl", "wb"))
 
 
-# In[5]:
+# In[6]:
 
 
 table_name = "table_face"
@@ -105,7 +105,7 @@ face_names = face_database.read_face_names(table_name)
 threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "rb"))
 
 
-# In[6]:
+# In[7]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -113,7 +113,7 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[7]:
+# In[8]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -124,7 +124,7 @@ def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{pat
     return response.json()
 
 
-# In[8]:
+# In[ ]:
 
 
 cap = []
@@ -181,6 +181,9 @@ class Window(Ui_MainWindow, QMainWindow):
         else:
 
             _, frame = cap.read()
+
+            if frame is None:
+                return
 
             frame = cv2.flip(frame, 1)
 
@@ -266,7 +269,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[9]:
+# In[10]:
 
 
 cap = cv2.VideoCapture(0)

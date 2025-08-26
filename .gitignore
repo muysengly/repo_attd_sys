@@ -2,11 +2,12 @@
 /.vscode
 
 _*/
+**/_*
+**/*.ipynb
+**/*.ui
 
 /log
 database.sqlite
 resource/variable/*.pkl
 resource/utility/models/buffalo_sc.zip
 
-**/*.ipynb
-**/*.ui

@@ -34,7 +34,7 @@ else:
     pass  # Other OS
 
 
-# In[2]:
+# In[ ]:
 
 
 from FaceModel import fa
@@ -54,24 +54,24 @@ import numpy as np
 
 
 from datetime import datetime as dt
+from FaceDatabase import FaceDataBase
+from AttendanceDatabase import AttendanceDatabase
 
 
-# In[3]:
+# In[ ]:
 
+
+# Create log folder if it doesn't exist
 
 log_folder = os.path.join(path_depth, "log")
 if not os.path.exists(log_folder):
     os.makedirs(log_folder)
 
 
-# In[4]:
+# In[ ]:
 
-
-from FaceDatabase import FaceDataBase
 
 face_database = FaceDataBase(path_depth + "database.sqlite")
-
-from AttendanceDatabase import AttendanceDatabase
 
 # attd_db = AttendanceDatabase(path_depth + "attendance.sqlite")
 attd_database = AttendanceDatabase(path_depth + "database.sqlite")

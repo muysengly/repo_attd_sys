@@ -1,32 +1,38 @@
 @echo off
 
 
-@REM Change working directory
-cd %USERPROFILE%
+@REM Check if Python is installed
+python --version >nul 2>&1
+IF %ERRORLEVEL% NEQ 0 (
+    echo Python is not installed. Please install Python and try again.
+    pause
+    exit /b 1
+)
 
 
-@REM Download the repository
-curl -L -o tmp.zip https://github.com/muysengly/repo_attendance_system/archive/refs/heads/main.zip
+@REM Check if pip is installed
+pip --version >nul 2>&1
+IF %ERRORLEVEL% NEQ 0 (
+    echo pip is not installed. Please install pip and try again.
+    pause
+    exit /b 1
+)
 
 
-@REM Extract the downloaded zip file
-tar -xf tmp.zip
+@REM create and activate virtual environment
+if not exist venv python -m venv venv
+call venv\Scripts\activate.bat
 
 
-@REM Delete the zip file after extraction
-del tmp.zip
-
-
-@REM Change directory to the extracted folder
-cd repo_attendance_system-main
+@REM upgrade pip
+python.exe -m pip install --upgrade pip
 
 
 @REM install dependencies
 pip install pyqt5 opencv-python insightface onnxruntime
 
 
-@REM Copy shortcut to desktop
-copy "%USERPROFILE%\repo_attendance_system-main\resource\utility\Attendance System.lnk" "%USERPROFILE%\Desktop\Attendance System.lnk"
+echo Setup completed. You can now run the application using win_run.vbs
 
 
 pause

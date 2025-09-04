@@ -7,7 +7,7 @@ _*/
 **/*.ui
 
 /log
+/venv
 database.sqlite
 resource/variable/*.pkl
 resource/utility/models/buffalo_sc.zip
-

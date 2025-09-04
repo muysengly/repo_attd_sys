@@ -34,7 +34,7 @@ else:
     pass  # Other OS
 
 
-# In[3]:
+# In[ ]:
 
 
 from View import Ui_MainWindow
@@ -44,17 +44,16 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import pickle
-# import subprocess
 
 
-# In[4]:
+# In[3]:
 
 
 token = pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))
 print(f"Token: {token}")
 
 
-# In[5]:
+# In[4]:
 
 
 # chat_id = ["fasdf", "asdfsadf"]
@@ -64,7 +63,7 @@ chat_id = pickle.load(open(f"{path_depth}resource/variable/_chat_id.pkl", "rb"))
 print(f"Chat ID: {chat_id}")
 
 
-# In[6]:
+# In[5]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -82,7 +81,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[7]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -148,7 +147,6 @@ win.listView_chat_id.model().dataChanged.connect(on_chat_id_data_changed)
 
 def on_button_back_clicked():
     app.exit()
-    # subprocess.Popen(["python", path_depth + "resource/view_controller/main_attendance_form/Controller.py"])
 
 
 win.pushButton_back.clicked.connect(on_button_back_clicked)

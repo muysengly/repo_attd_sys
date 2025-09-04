@@ -11,7 +11,11 @@ sudo apt install python3-pip python3-venv python3-opencv python3-pyqt5 build-ess
 
 
 # change working directory to home directory
-cd ~
+# cd ~
+
+
+# change current directory to current file location
+# cd "$(dirname "$0")"
 
 
 # Create virtual environment if it doesn't exist

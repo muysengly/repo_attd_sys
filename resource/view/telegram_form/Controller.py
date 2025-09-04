@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import os
@@ -17,11 +17,15 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
+os.environ["QT_SCALE_FACTOR"] = "1"  # Set scaling factor
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"  # Enable automatic scaling
+os.environ["QT_SCREEN_SCALE_FACTORS"] = "1"  # Set screen scaling
 
 if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
+
     # pass  # Windows system
 elif os.name == "posix":  # POSIX: Portable Operating System Interface
     if "darwin" in os.sys.platform:
@@ -29,7 +33,7 @@ elif os.name == "posix":  # POSIX: Portable Operating System Interface
     else:
         # os.environ["DISPLAY"] = ":0"  # Set display
         # os.environ["QT_QPA_PLATFORM"] = "wayland"  # Set platform for Qt
-        pass # Linux system
+        pass  # Linux system
 else:
     pass  # Other OS
 

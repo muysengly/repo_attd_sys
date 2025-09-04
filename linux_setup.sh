@@ -7,15 +7,11 @@ sudo apt upgrade -y
 
 
 # install necessary packages
-sudo apt install python3-pip python3-venv python3-opencv python3-pyqt5 build-essential curl -y
+sudo apt install python3-pip python3-venv python3-opencv python3-pyqt5 build-essential -y
 
 
-# change working directory to home directory
-# cd ~
-
-
-# change current directory to current file location
-# cd "$(dirname "$0")"
+# install dependencies for insightface
+# sudo apt install libopenblas-dev liblapack-dev libjpeg-dev libpng-dev -y
 
 
 # Create virtual environment if it doesn't exist
@@ -25,28 +21,14 @@ fi
 
 
 # Activate virtual environment
-source ~/venv/bin/activate
+source venv/bin/activate
+
+
+# upgrade pip
+python -m pip install --upgrade pip
+
 
 # install dependencies
-pip install pyqt5 opencv-python insightface onnxruntime
+pip install pyqt5 opencv-python-headless insightface onnxruntime
 
 
-# download the repository https://github.com/muysengly/repo_attendance_system_gtr/archive/refs/heads/main.zip
-curl -L -o tmp.zip https://github.com/muysengly/repo_attendance_system_gtr/archive/refs/heads/main.zip
-
-
-# Extract the downloaded zip file
-unzip tmp.zip
-rm tmp.zip
-
-
-###### run project
-cd ~
-
-# change working directory to the extracted folder
-cd repo_attendance_system_gtr-main
-
-
-export QT_QPA_PLATFORM=wayland
-
-python Main.py

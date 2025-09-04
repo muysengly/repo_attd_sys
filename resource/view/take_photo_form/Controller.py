@@ -1,17 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
-# TODO:
-# - make sure only on person is in the image
-# - make sure the face is big enough
-# -
-# -
-# -
-
-
 # In[ ]:
 
 
@@ -28,11 +17,16 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
+os.environ["QT_SCALE_FACTOR"] = "1"  # Set scaling factor
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"  # Enable automatic scaling
+os.environ["QT_SCREEN_SCALE_FACTORS"] = "1"  # Set screen scaling
 
 if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
+
+
     # pass  # Windows system
 elif os.name == "posix":  # POSIX: Portable Operating System Interface
     if "darwin" in os.sys.platform:
@@ -45,7 +39,7 @@ else:
     pass  # Other OS
 
 
-# In[3]:
+# In[ ]:
 
 
 # from insightface.app import FaceAnalysis
@@ -65,14 +59,14 @@ import numpy as np
 # import subprocess
 
 
-# In[4]:
+# In[ ]:
 
 
 # fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 # fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 
 
-# In[5]:
+# In[ ]:
 
 
 cap = cv2.VideoCapture(0)
@@ -140,7 +134,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_camera.setPixmap(q_pixmap)
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -165,7 +159,6 @@ win.pushButton_take_photo.clicked.connect(take_photo)
 
 
 def on_button_back_clicked():
-    # win.close()
     app.exit()
 
 

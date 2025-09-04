@@ -1,18 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
-# TODO:
-# -
-# -
-# -
-# -
-# -
-
-
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -29,10 +18,16 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
 
+os.environ["QT_SCALE_FACTOR"] = "1"  # Set scaling factor
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"  # Enable automatic scaling
+os.environ["QT_SCREEN_SCALE_FACTORS"] = "1"  # Set screen scaling
+
+
 if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
+
     # pass  # Windows system
 elif os.name == "posix":  # POSIX: Portable Operating System Interface
     if "darwin" in os.sys.platform:
@@ -40,12 +35,12 @@ elif os.name == "posix":  # POSIX: Portable Operating System Interface
     else:
         # os.environ["DISPLAY"] = ":0"  # Set display
         # os.environ["QT_QPA_PLATFORM"] = "wayland"  # Set platform for Qt
-        pass # Linux system
+        pass  # Linux system
 else:
     pass  # Other OS
 
 
-# In[3]:
+# In[ ]:
 
 
 from View import Ui_MainWindow
@@ -59,7 +54,7 @@ import csv
 from datetime import datetime as dt
 
 
-# In[4]:
+# In[ ]:
 
 
 from AttendanceDatabase import AttendanceDatabase
@@ -71,7 +66,7 @@ att_db = AttendanceDatabase(path_depth + "database.sqlite")
 group_name = "table_face"
 
 
-# In[5]:
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -90,7 +85,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[6]:
+# In[ ]:
 
 
 app = QApplication([])
@@ -182,7 +177,6 @@ win.pushButton_save.clicked.connect(on_button_save_csv_clicked)
 
 def on_button_back_clicked():
     app.exit()
-    # subprocess.Popen(["python", path_depth + "resource/view_controller/main_attendance_form/Controller.py"])
 
 
 win.pushButton_back.clicked.connect(on_button_back_clicked)

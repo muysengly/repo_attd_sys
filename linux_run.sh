@@ -1,13 +1,20 @@
 #!/bin/bash
 
-# export QT_QPA_PLATFORM=eglfs
-export QT_QPA_PLATFORM=wayland
 
-source ~/venv/bin/activate
+# activate virtual environment
+source venv/bin/activate
 
-cd ~
 
-chmod +x Main.py
+# set QT platform to xcb or wayland based on your system
+# export QT_QPA_PLATFORM=xcb
+# export QT_QPA_PLATFORM=wayland
 
+# set QT scaling factors (adjust as needed)
+# export QT_SCALE_FACTOR=1
+# export QT_AUTO_SCREEN_SCALE_FACTOR=1
+# export QT_SCREEN_SCALE_FACTORS=1
+
+
+# run the application
 python Main.py
 

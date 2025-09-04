@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import os
@@ -17,11 +17,15 @@ if "__file__" not in globals():  # check if running in Jupyter Notebook
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
+os.environ["QT_SCALE_FACTOR"] = "1"  # Set scaling factor
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"  # Enable automatic scaling
+os.environ["QT_SCREEN_SCALE_FACTORS"] = "1"  # Set screen scaling
 
 if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
+
     # pass  # Windows system
 elif os.name == "posix":  # POSIX: Portable Operating System Interface
     if "darwin" in os.sys.platform:
@@ -77,7 +81,7 @@ face_database = FaceDataBase(path_depth + "database.sqlite")
 attd_database = AttendanceDatabase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 # initialize variables
@@ -95,7 +99,7 @@ if not os.path.exists(f"{path_depth}resource/variable/_threshold.pkl"):
     pickle.dump(70, open(f"{path_depth}resource/variable/_threshold.pkl", "wb"))
 
 
-# In[6]:
+# In[ ]:
 
 
 table_name = "table_face"
@@ -105,7 +109,7 @@ face_names = face_database.read_face_names(table_name)
 threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "rb"))
 
 
-# In[7]:
+# In[ ]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -113,7 +117,7 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[8]:
+# In[ ]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -269,7 +273,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[10]:
+# In[ ]:
 
 
 cap = cv2.VideoCapture(0)
@@ -310,12 +314,12 @@ win.spinBox_threshold.valueChanged.connect(f_threshold_change)
 
 def f_register():
     # app.exit()
-    # subprocess.Popen(["python", path_depth + "resource/view_controller/face_management_form/Controller.py"])
+    # subprocess.Popen(["python", path_depth + "resource/view/face_management_form/Controller.py"])
     # global cap
     # win.hide()
     # win.showMinimized()
     cap.release()
-    os.system("python " + path_depth + "resource/view_controller/face_management_form/Controller.py")
+    os.system("python " + path_depth + "resource/view/face_management_form/Controller.py")
     cap.open(0)
     # win.show()
 
@@ -325,11 +329,11 @@ win.pushButton_register.clicked.connect(f_register)
 
 def f_query():
     # app.exit()
-    # subprocess.Popen(["python", path_depth + "resource/view_controller/attendance_database_form/Controller.py"])
+    # subprocess.Popen(["python", path_depth + "resource/view/attendance_database_form/Controller.py"])
     # global cap
     # win.hide()
     cap.release()
-    os.system("python " + path_depth + "resource/view_controller/attendance_database_form/Controller.py")
+    os.system("python " + path_depth + "resource/view/attendance_database_form/Controller.py")
     cap.open(0)
     # win.show()
 
@@ -339,11 +343,11 @@ win.pushButton_query.clicked.connect(f_query)
 
 def goto_telegram():
     # app.exit()
-    # subprocess.Popen(["python", path_depth + "resource/view_controller/telegram_form/Controller.py"])
+    # subprocess.Popen(["python", path_depth + "resource/view/telegram_form/Controller.py"])
     # global cap
     # win.hide()
     cap.release()
-    os.system("python " + path_depth + "resource/view_controller/telegram_form/Controller.py")
+    os.system("python " + path_depth + "resource/view/telegram_form/Controller.py")
     cap.open(0)
     # win.show()
 
@@ -413,8 +417,6 @@ def f_close():
     global cap
     reply = QMessageBox.question(win, "Exit", "Are you sure you want to exit?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
     if reply == QMessageBox.Yes:
-        # cap.release()
-        # win.close()
         app.quit()
 
 

@@ -1,7 +1,7 @@
 @echo off
 
 
-@REM Check if Python is installed
+@REM check if Python is installed
 python --version >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
     echo Python is not installed. Please install Python and try again.
@@ -10,7 +10,7 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 
-@REM Check if pip is installed
+@REM check if pip is installed
 pip --version >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
     echo pip is not installed. Please install pip and try again.
@@ -32,6 +32,7 @@ python.exe -m pip install --upgrade pip
 pip install pyqt5 opencv-python insightface onnxruntime
 
 
+@REM show completion message
 echo Setup completed. You can now run the application using win_run.vbs
 
 

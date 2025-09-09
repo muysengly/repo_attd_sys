@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -357,7 +357,7 @@ def f_update():
     cap.release()
     try:
         headers = {"Accept": "application/vnd.github.v3.raw"}
-        git_version_string = requests.get("https://api.github.com/repos/muysengly/repo_attendance_system/contents/resource/variable/_version.txt", headers=headers).text
+        git_version_string = requests.get("https://api.github.com/repos/muysengly/repo_attd_sys/contents/resource/variable/_version.txt", headers=headers).text
         git_version_int = list(map(int, git_version_string.split(".")))
 
         if git_version_int > version_int:  # NOTE: 1.0.2 < 1.0.3 / 1.0.2 < 1.1.0 / 1.0.2 < 2.0.0
@@ -366,7 +366,7 @@ def f_update():
             if reply == QMessageBox.Yes:
 
                 for _ in range(10):  # retry up to 10 times
-                    response = requests.get("https://github.com/muysengly/repo_attendance_system/archive/refs/heads/main.zip", stream=True)
+                    response = requests.get("https://github.com/muysengly/repo_attd_sys/archive/refs/heads/main.zip", stream=True)
                     total_size = int(response.headers.get("content-length", 0))
                     if total_size > 0:
                         break

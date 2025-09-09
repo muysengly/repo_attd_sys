@@ -1,10 +1,10 @@
-Set oWS = WScript.CreateObject("WScript.Shell") 
-sLinkFile = "C:\Users\muysengly\Desktop\Attendance System.lnk" 
-Set oLink = oWS.CreateShortcut(sLinkFile) 
-oLink.TargetPath = "C:\Users\muysengly\Desktop\repo_attendance_system\venv\Scripts\python.exe" 
-oLink.Arguments = "C:\Users\muysengly\Desktop\repo_attendance_system\main.py"  
-oLink.WorkingDirectory = "C:\Users\muysengly\Desktop\repo_attendance_system" 
-oLink.WindowStyle = 1 
-oLink.IconLocation = "C:\Users\muysengly\Desktop\repo_attendance_system\icon.ico" 
-oLink.Description = "Attendance System Application" 
-oLink.Save 
+' set wscript shell
+Set WshShell = CreateObject("WScript.Shell")
+
+' run the command to activate the virtual environment and run the main script
+WshShell.Run "cmd.exe /c ""venv\Scripts\activate.bat && python Main.py""", 0, False 
+' WshShell.Run "cmd.exe /k ""venv\Scripts\activate.bat && python Main.py""", 1, True 
+
+' /c means carry out the command and then terminate, /k means carry out the command and then remain
+' 0 means hide the window, 1 means show the window
+' False means don't wait for the command to finish, True means wait for the command to finish

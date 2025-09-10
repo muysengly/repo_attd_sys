@@ -1,62 +1,52 @@
 # Attendance System Using Face Recognition
 
-- Developer: MUY SENGLY
+- Developer: Dr. Sealion
 - Telegram: https://t.me/muysengly
 
-# How To Setup?
-
 ---
 
-## Step 1: Download Project
+## + Windows OS (11/10)
 
-### 1.1. Download The Repository
+### Step 1: Setup Dependencies
 
-- **Link**: https://github.com/muysengly/proj_attendance
-
-![alt text](resource/asset/003.png)
-
-### 1.2. Unzip The Downloaded File.
-
-- **Recommended**: Unzip the file to `Desktop`.
-
----
-
-## Step 2: Download And Install Visual Studio Build Tools
-
-### 2.1. Download Visual Studio Build Tools
+#### - Download and Install Visual Studio Build Tools
 
 - **Link**: https://aka.ms/vs/17/release/vs_BuildTools.exe
 
-### 2.2. Install Visual Studio Build Tools with C++ Build Tools
+> Install Visual Studio Build Tools with C++ Build Tools
 
-![alt text](resource/asset/001.png)
-
----
-
-## Step 3: Download And Install Python 3.11
-
-### 3.1. Download Python 3.11
+#### - Download And Install Python 3.11 or Above
 
 - **Link**: https://www.python.org/ftp/python/
 
-### 3.2. Install Python 3.11
+> Make sure to check the box "Add Python to PATH" during installation
 
-![alt text](resource/asset/002.png)
+### Step 2: Setup Project
+
+#### - Download The Release File
+
+Download `setup_window.bat` from the release section and **Double Click**.
+
+## Step 3: Run Application
+
+#### - Run The Application File
+
+Open the project folder and run the application **Double Click**: `run_window.bat`
 
 ---
 
-## Step 4: Setup Project
+## + Linux OS (Ubuntu)
 
-### 4.1. Run Bat File To Install Required Libraries
+### Step 1: Setup Project
 
-- **Run**: `setup.bat`
+- **Double Click**: `run_linux.sh`
 
-**NOTE**: if you have problem with `setup.bat`, please contact me
+### Step 2: Run Application
+
+- **Double Click**: `run_linux.sh`
 
 ---
 
-## Step 5: Run Application
+## + Mac OS
 
-### 5.1. Run Application
-
-- **Run**: `runs.vbs`
+> macOS support is pending; we currently need a macOS device for testing and development.

@@ -31,8 +31,6 @@ elif os.name == "posix":  # POSIX: Portable Operating System Interface
     if "darwin" in os.sys.platform:
         pass  # macOS system
     else:
-        # os.environ["DISPLAY"] = ":0"  # Set display
-        # os.environ["QT_QPA_PLATFORM"] = "wayland"  # Set platform for Qt
         pass  # Linux system
 else:
     pass  # Other OS
@@ -356,9 +354,10 @@ win.pushButton_telegram.clicked.connect(goto_telegram)
 
 
 def f_update():
+    cap.release()
     try:
         headers = {"Accept": "application/vnd.github.v3.raw"}
-        git_version_string = requests.get("https://api.github.com/repos/muysengly/repo_attendance_system_gtr/contents/resource/variable/_version.txt", headers=headers).text
+        git_version_string = requests.get("https://api.github.com/repos/muysengly/repo_attendance_system/contents/resource/variable/_version.txt", headers=headers).text
         git_version_int = list(map(int, git_version_string.split(".")))
 
         if git_version_int > version_int:  # NOTE: 1.0.2 < 1.0.3 / 1.0.2 < 1.1.0 / 1.0.2 < 2.0.0
@@ -367,7 +366,7 @@ def f_update():
             if reply == QMessageBox.Yes:
 
                 for _ in range(10):  # retry up to 10 times
-                    response = requests.get("https://github.com/muysengly/repo_attendance_system_gtr/archive/refs/heads/main.zip", stream=True)
+                    response = requests.get("https://github.com/muysengly/repo_attendance_system/archive/refs/heads/main.zip", stream=True)
                     total_size = int(response.headers.get("content-length", 0))
                     if total_size > 0:
                         break
@@ -391,11 +390,14 @@ def f_update():
                             progress.setValue(percent)
                     progress.setValue(100)
 
-                    # extract the downloaded zip file
                     with zipfile.ZipFile(f"{path_depth}tmp.zip", "r") as zip_ref:
-                        # TODO: unzip the file to the correct location
-                        zip_ref.extractall(os.path.expanduser("~"))
-                        os.remove(f"{path_depth}tmp.zip")
+                        for zip_info in zip_ref.infolist():
+                            extracted_path = zip_info.filename.split("/", 1)[-1] if "/" in zip_info.filename else zip_info.filename
+                            if extracted_path:
+                                zip_info.filename = extracted_path
+                                zip_ref.extract(zip_info, path_depth)
+
+                    os.remove(f"{path_depth}tmp.zip")
 
                     # show message box to inform the user
                     QMessageBox.information(win, "Update Complete", f"Updated to version {git_version_string}. \nPlease restart the application.")
@@ -407,10 +409,11 @@ def f_update():
     except requests.RequestException as e:
         QMessageBox.critical(win, "Error", "No Internet Connection!")
 
+    cap.open(0)
 
 win.pushButton_update.clicked.connect(f_update)
 
-win.pushButton_update.deleteLater()
+# win.pushButton_update.deleteLater()
 
 
 def f_close():

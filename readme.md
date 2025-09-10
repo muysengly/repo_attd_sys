@@ -1,4 +1,4 @@
-# Attendance System GTR
+# Attendance System Using Face Recognition
 
 A simple attendance tracking system.
 

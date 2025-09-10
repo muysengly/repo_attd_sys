@@ -26,15 +26,12 @@ if os.name == "nt":  # Windows NT: Windows New Technology
 
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("my.app.id")
 
-
     # pass  # Windows system
 elif os.name == "posix":  # POSIX: Portable Operating System Interface
     if "darwin" in os.sys.platform:
         pass  # macOS system
     else:
-        # os.environ["DISPLAY"] = ":0"  # Set display
-        # os.environ["QT_QPA_PLATFORM"] = "wayland"  # Set platform for Qt
-        pass # Linux system
+        pass  # Linux system
 else:
     pass  # Other OS
 

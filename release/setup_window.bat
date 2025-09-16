@@ -1,15 +1,12 @@
 @echo off
 
 
-
 @REM download the repository
 curl -L -o tmp.zip https://github.com/muysengly/repo_attd_sys/archive/refs/heads/main.zip
 
 
-
 @REM unzip tmp.zip
 powershell -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'tmp.zip' -DestinationPath '.' -Force"
-
 
 
 @REM set new folder name with timestamp
@@ -24,22 +21,18 @@ set datetime=%year%%month%%day%%hour%%minute%%second%
 set new_name=%datetime%_attendance_system_app
 
 
-
 @REM rename the unzipped folder
 IF EXIST "repo_attd_sys-main" (
     RENAME "repo_attd_sys-main" "%new_name%"
 )
 
 
-
 @REM delete tmp.zip
 IF EXIST "tmp.zip" DEL /F /Q "tmp.zip"
 
 
-
 @REM change directory to the application folder
 cd %new_name%
-
 
 
 @REM check if Python is installed
@@ -51,7 +44,6 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 
-
 @REM check if pip is installed
 pip --version >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
@@ -61,27 +53,22 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 
-
 @REM create and activate virtual environment
 if not exist venv python -m venv venv
 call venv\Scripts\activate.bat
-
 
 
 @REM upgrade pip
 python.exe -m pip install --upgrade pip
 
 
-
 @REM install dependencies
 pip install pyqt5 opencv-python insightface onnxruntime
-
 
 
 @REM create run_window.vbs script to run the application in a hidden window
 echo Set WshShell = CreateObject("WScript.Shell") >> run_window.vbs
 echo WshShell.Run "cmd.exe /c venv\Scripts\activate && python Main.py", 0, False >> run_window.vbs
-
 
 
 @REM show completion message

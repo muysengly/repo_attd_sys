@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # update and upgrade system packages
 sudo apt update
 sudo apt upgrade -y
@@ -16,6 +17,7 @@ rm tmp.zip
 
 
 new_name=$(date +%Y%m%d%H%M%S)_attendance_system
+
 
 # rename the unzipped folder
 mv repo_attd_sys-main $new_name
@@ -44,14 +46,17 @@ python -m pip install --upgrade pip
 pip install pyqt5 opencv-python-headless insightface onnxruntime
 
 
-
 # create run_linux.sh script to run the application
 current_dir=$(pwd)
 cat << EOF > run_linux.sh
 #!/bin/bash
 
 # change to the script's directory
-cd "$current_dir"
+if [ -d "$current_dir" ]; then
+    cd "$current_dir"
+else
+    echo "Directory renamed."
+fi
 
 # Activate virtual environment
 source venv/bin/activate

@@ -42,6 +42,23 @@ python -m pip install --upgrade pip
 pip install pyqt5 opencv-python-headless insightface onnxruntime
 
 
+
+# create run_linux.sh script to run the application
+current_dir=$(pwd)
+cat << EOF > run_linux.sh
+#!/bin/bash
+
+# change to the script's directory
+cd "$current_dir"
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Run the application
+python main.py
+EOF
+
+
 # change permission to execute the run_linux.sh script
 chmod +x run_linux.sh
 

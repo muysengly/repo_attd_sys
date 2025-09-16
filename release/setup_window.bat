@@ -57,6 +57,12 @@ pip install pyqt5 opencv-python insightface onnxruntime
 
 
 
+@REM create run_window.vbs script to run the application in a hidden window
+echo Set WshShell = CreateObject("WScript.Shell") >> run_window.vbs
+echo WshShell.Run "cmd.exe /c venv\Scripts\activate && python Main.py", 0, False >> run_window.vbs
+
+
+
 @REM show completion message
 echo Setup completed. 
 

@@ -55,7 +55,7 @@ cd "$current_dir"
 source venv/bin/activate
 
 # Run the application
-python main.py
+python Main.py
 EOF
 
 

@@ -46,38 +46,15 @@ if not exist venv python -m venv venv
 call venv\Scripts\activate.bat
 
 
+
 @REM upgrade pip
 python.exe -m pip install --upgrade pip
+
 
 
 @REM install dependencies
 pip install pyqt5 opencv-python insightface onnxruntime
 
-
-@REM create shortcut 
-
-@REM set paths
-set "VENV_PATH=%~dp0venv\Scripts\activate.bat"
-set "PROJECT_PATH=%~dp0"
-set "MAIN_SCRIPT=Main.py"
-set "SHORTCUT_NAME=run_window"
-
-@REM set shortcut location
-set "SHORTCUT_PATH=%~dp0%SHORTCUT_NAME%.lnk"
-
-@REM Build the command for CMD 
-set "CMD_COMMAND=call \"%VENV_PATH%\" && python \"%PROJECT_PATH%%MAIN_SCRIPT%\""
-
-@REM Create shortcut using PowerShell
-powershell -NoProfile -Command ^
-    "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%SHORTCUT_PATH%');" ^
-    "$s.TargetPath='cmd.exe';" ^
-    "$s.Arguments='/k %CMD_COMMAND%';" ^
-    "$s.WorkingDirectory='%PROJECT_PATH%';" ^
-    "$s.IconLocation='%PROJECT_PATH%resource\asset\my_logo.ico';" ^
-    "$s.Save()"
-
-echo Shortcut created: %SHORTCUT_PATH%
 
 
 @REM show completion message

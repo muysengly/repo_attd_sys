@@ -46,26 +46,6 @@ pip install pyqt5 opencv-python-headless insightface onnxruntime
 chmod +x run_linux.sh
 
 
-
-PROJECT_PATH="$(dirname "$(realpath "$0")")"
-
-cat > "$PROJECT_PATH/run_linux.desktop" <<EOL
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=Run Main
-Comment=Run Python Main.py inside venv
-Path=$PROJECT_PATH
-Exec=bash -c "cd '$PROJECT_PATH' && source venv/bin/activate && python Main.py"
-Icon=$PROJECT_PATH/resource/asset/my_logo.ico
-Terminal=true
-EOL
-
-chmod +x "$PROJECT_PATH/run_linux.desktop"
-
-
-
-
 # show completion message
 echo "Setup completed."
 echo "You can now run the application using run_linux.sh"

@@ -46,19 +46,23 @@ pip install pyqt5 opencv-python-headless insightface onnxruntime
 chmod +x run_linux.sh
 
 
-# create shortcut for run_linux.desktop
-cat <<EOF > $(pwd)/run_linux.desktop
+#!/bin/bash
+PROJECT_PATH="$(dirname "$(realpath "$0")")"
+
+cat > "$PROJECT_PATH/run_window.desktop" <<EOL
 [Desktop Entry]
+Version=1.0
 Type=Application
-Name=Run Attendance System
-Exec=source $(pwd)/venv/bin/activate && python $(pwd)/Main.py
-Icon=$(pwd)/resource/asset/icon.png
+Name=run_linux
+Comment=Run Python Main.py inside venv
+Path=$PROJECT_PATH
+Exec=bash -c "source venv/bin/activate && python Main.py"
+Icon=$PROJECT_PATH/resource/asset/my_logo.ico
 Terminal=true
-EOF 
+EOL
 
+chmod +x "$PROJECT_PATH/run_window.desktop"
 
-# change permission to execute the run_linux.desktop script
-chmod +x ~/Desktop/run_linux.desktop
 
 
 # show completion message

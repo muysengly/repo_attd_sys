@@ -1,6 +1,6 @@
 # Attendance System Using Face Recognition
 
-- Developer: Dr. Sealion
+- Developer: Dr. MUY Sengly
 - Telegram: https://t.me/muysengly
 
 ---

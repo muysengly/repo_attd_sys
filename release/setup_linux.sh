@@ -15,9 +15,11 @@ unzip tmp.zip
 rm tmp.zip
 
 
-# rename the unzipped folder to attd_system_app
-mv repo_attd_sys-main attd_system_app
-cd attd_system_app
+new_name=$(date +%Y%m%d%H%M%S)_attendance_system
+
+# rename the unzipped folder
+mv repo_attd_sys-main $new_name
+cd $new_name
 
 
 # install dependencies for insightface

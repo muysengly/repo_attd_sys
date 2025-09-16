@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Attendance System
+Comment=Run Attendance System Application
+Exec=/path/to/your/attendance_system/main.py
+Icon=/path/to/your/attendance_system/icon.png
+Terminal=false
+Categories=Application;

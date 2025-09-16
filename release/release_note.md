@@ -1,25 +1,10 @@
-This is a template for a release note.
+This is the initial release of the Attendance System. This first version provides core functionality for tracking and managing attendance with cross-platform support.
 
-## Setup
+## What's New
 
-#### Windows
+This is the first stable release featuring:
 
-```
-curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_window.bat | cmd
-```
-
-#### Linux
-
-```
-sudo apt install curl -y
-curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_linux.sh | bash
-```
-
-#### MacOS
-
-> Under Development
-
-## Highlights
-
-- Feature 1
-- Feature 2
+- Initial attendance tracking system
+- Cross-platform installation support (Windows, Linux)
+- Basic user interface and core functionality
+- Foundation for future feature development

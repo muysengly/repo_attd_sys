@@ -23,27 +23,43 @@
 
 ### Step 2: Setup Project
 
-#### - Download The Release File
-
-Download `setup_window.bat` from the release section and **Double Click**.
+```
+curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_window.bat | cmd
+```
 
 ## Step 3: Run Application
 
 #### - Run The Application File
 
-Open the project folder and run the application **Double Click**: `run_window.bat`
+Open the project folder and click on `run_window.bat`.
 
 ---
 
 ## + Linux OS (Ubuntu)
 
-### Step 1: Setup Project
+### Step 1: Update System and Install Dependencies
 
-- **Double Click**: `run_linux.sh`
+#### - Update System
 
-### Step 2: Run Application
+```
+sudo apt update && sudo apt upgrade -y
+```
 
-- **Double Click**: `run_linux.sh`
+#### - Install Curl
+
+```
+sudo apt install curl -y
+```
+
+### Step 2: Setup Project
+
+```
+curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_linux.sh | bash
+```
+
+### Step 3: Run Application
+
+Open the project folder and click on `run_linux.sh`.
 
 ---
 

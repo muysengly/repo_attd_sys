@@ -5,14 +5,14 @@ This is a template for a release note.
 #### Windows
 
 ```
-curl -fsSL https://github.com/muysengly/repo_attd_sys/releases/download/my_tag/setup_window.bat | cmd
+curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_window.bat | cmd
 ```
 
 #### Linux
 
 ```
 sudo apt install curl -y
-curl -fsSL https://api.github.com/repos/muysengly/repo_attd_sys/contents/release/setup_linux.sh | bash
+curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_linux.sh | bash
 ```
 
 #### MacOS

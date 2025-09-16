@@ -58,8 +58,25 @@ pip install pyqt5 opencv-python insightface onnxruntime
 
 
 @REM show completion message
-echo Setup completed. 
-echo You can now run the application using run_window.vbs
+@REM echo Setup completed. 
+@REM echo You can now run the application using run_window.vbs
+
+
+@REM create shortcut on current directory to run the application Main.py
+
+@echo Creating shortcut...
+@echo Set oWS = WScript.CreateObject("WScript.Shell") > run_window.vbs
+@echo sLinkFile = oWS.CurrentDirectory ^& "\run_window.lnk" >> run_window.vbs
+@echo Set oLink = oWS.CreateShortcut(sLinkFile) >> run_window.vbs   
+@echo oLink.TargetPath = oWS.CurrentDirectory ^& "\venv\Scripts\python.exe" >> run_window.vbs
+@echo oLink.Arguments = oWS.CurrentDirectory ^& "\Main.py" >> run_window.vbs
+@echo oLink.WorkingDirectory = oWS.CurrentDirectory >> run_window.vbs   
+@echo oLink.WindowStyle = 1 >> run_window.vbs   
+@echo oLink.Description = "Run Attendance System Application" >> run_window.vbs
+@echo oLink.IconLocation = oWS.CurrentDirectory ^& "\icon.ico" >> run_window.vbs
+@echo oLink.Save >> run_window.vbs
+@echo Shortcut created: run_window.lnk
+
 
 
 pause

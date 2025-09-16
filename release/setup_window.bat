@@ -1,26 +1,45 @@
 @echo off
 
 
+
 @REM download the repository
 curl -L -o tmp.zip https://github.com/muysengly/repo_attd_sys/archive/refs/heads/main.zip
+
 
 
 @REM unzip tmp.zip
 powershell -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'tmp.zip' -DestinationPath '.' -Force"
 
 
-@REM rename the unzipped folder to attd_system_app
+
+@REM set new folder name with timestamp
+set year=%date:~0,4%
+set month=%date:~5,2%
+set day=%date:~8,2%
+set hour=%time:~0,2%
+set minute=%time:~3,2%
+set second=%time:~6,2%
+if "%hour:~0,1%"==" " set hour=0%hour:~1,1%
+set datetime=%year%%month%%day%%hour%%minute%%second%
+set new_name=%datetime%_attendance_system_app
+
+
+
+@REM rename the unzipped folder
 IF EXIST "repo_attd_sys-main" (
-    RENAME "repo_attd_sys-main" "attd_system_app"
+    RENAME "repo_attd_sys-main" "%new_name%"
 )
+
 
 
 @REM delete tmp.zip
 IF EXIST "tmp.zip" DEL /F /Q "tmp.zip"
 
 
+
 @REM change directory to the application folder
-cd attd_system_app
+cd %new_name%
+
 
 
 @REM check if Python is installed
@@ -32,6 +51,7 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 
+
 @REM check if pip is installed
 pip --version >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
@@ -39,6 +59,7 @@ IF %ERRORLEVEL% NEQ 0 (
     pause
     exit /b 1
 )
+
 
 
 @REM create and activate virtual environment
@@ -65,5 +86,6 @@ echo WshShell.Run "cmd.exe /c venv\Scripts\activate && python Main.py", 0, False
 
 @REM show completion message
 echo Setup completed. 
+
 
 pause

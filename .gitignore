@@ -2,6 +2,7 @@
 /.vscode
 /.gitignore
 
+
 _*/
 **/_*
 **/*.ipynb
@@ -10,6 +11,9 @@ _*/
 
 /log
 /venv
+
+
+run_window.lnk
 database.sqlite
 resource/variable/*.pkl
 resource/utility/models/buffalo_sc.zip

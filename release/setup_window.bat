@@ -54,29 +54,33 @@ python.exe -m pip install --upgrade pip
 pip install pyqt5 opencv-python insightface onnxruntime
 
 
-@REM TODO: create shortcut to run the application
+@REM create shortcut 
+
+@REM set paths
+set "VENV_PATH=%~dp0venv\Scripts\activate.bat"
+set "PROJECT_PATH=%~dp0"
+set "MAIN_SCRIPT=Main.py"
+set "SHORTCUT_NAME=run_window"
+
+@REM set shortcut location
+set "SHORTCUT_PATH=%~dp0%SHORTCUT_NAME%.lnk"
+
+@REM Build the command for CMD 
+set "CMD_COMMAND=call \"%VENV_PATH%\" && python \"%PROJECT_PATH%%MAIN_SCRIPT%\""
+
+@REM Create shortcut using PowerShell
+powershell -NoProfile -Command ^
+    "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%SHORTCUT_PATH%');" ^
+    "$s.TargetPath='cmd.exe';" ^
+    "$s.Arguments='/k %CMD_COMMAND%';" ^
+    "$s.WorkingDirectory='%PROJECT_PATH%';" ^
+    "$s.IconLocation='%PROJECT_PATH%resource\asset\my_logo.ico';" ^
+    "$s.Save()"
+
+echo Shortcut created: %SHORTCUT_PATH%
 
 
 @REM show completion message
-@REM echo Setup completed. 
-@REM echo You can now run the application using run_window.vbs
-
-
-@REM create shortcut on current directory to run the application Main.py
-
-@echo Creating shortcut...
-@echo Set oWS = WScript.CreateObject("WScript.Shell") > run_window.vbs
-@echo sLinkFile = oWS.CurrentDirectory ^& "\run_window.lnk" >> run_window.vbs
-@echo Set oLink = oWS.CreateShortcut(sLinkFile) >> run_window.vbs   
-@echo oLink.TargetPath = oWS.CurrentDirectory ^& "\venv\Scripts\python.exe" >> run_window.vbs
-@echo oLink.Arguments = oWS.CurrentDirectory ^& "\Main.py" >> run_window.vbs
-@echo oLink.WorkingDirectory = oWS.CurrentDirectory >> run_window.vbs   
-@echo oLink.WindowStyle = 1 >> run_window.vbs   
-@echo oLink.Description = "Run Attendance System Application" >> run_window.vbs
-@echo oLink.IconLocation = oWS.CurrentDirectory ^& "\icon.ico" >> run_window.vbs
-@echo oLink.Save >> run_window.vbs
-@echo Shortcut created: run_window.lnk
-
-
+echo Setup completed. 
 
 pause

@@ -7,7 +7,6 @@ _*/
 **/*.ipynb
 **/*.ui
 
-!__release__/
 
 /log
 /venv

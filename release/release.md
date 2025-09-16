@@ -12,7 +12,7 @@ curl -fsSL https://github.com/muysengly/repo_attd_sys/releases/download/my_tag/s
 
 ```
 sudo apt install curl -y
-curl -fsSL https://github.com/muysengly/repo_attd_sys/releases/download/my_tag/setup_linux.sh | bash
+curl -fsSL https://api.github.com/repos/muysengly/repo_attd_sys/contents/release/setup_linux.sh | bash
 ```
 
 #### MacOS

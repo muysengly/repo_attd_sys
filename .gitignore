@@ -17,3 +17,6 @@ run_window.lnk
 database.sqlite
 resource/variable/*.pkl
 resource/utility/models/buffalo_sc.zip
+
+run_window.vbs
+run_linux.sh

@@ -9,17 +9,6 @@ curl -L -o tmp.zip https://github.com/muysengly/repo_attd_sys/archive/refs/heads
 powershell -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'tmp.zip' -DestinationPath '.' -Force"
 
 
-@REM set new folder name with timestamp
-@REM set year=%date:~0,4%
-@REM set month=%date:~5,2%
-@REM set day=%date:~8,2%
-@REM set hour=%time:~0,2%
-@REM set minute=%time:~3,2%
-@REM set second=%time:~6,2%
-@REM if "%hour:~0,1%"==" " set hour=0%hour:~1,1%
-@REM set datetime=%year%%month%%day%%hour%%minute%%second%
-@REM set new_name=%datetime%_attendance_system_app
-
 set new_name=attendance_system
 
 

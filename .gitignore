@@ -1,6 +1,5 @@
 /.git
 /.vscode
-/.gitignore
 
 
 _*/
@@ -18,6 +17,7 @@ database.sqlite
 resource/variable/*.pkl
 resource/utility/models/buffalo_sc.zip
 
+.gitignore
 run_window.bat
 run_window.vbs
 run_linux.sh

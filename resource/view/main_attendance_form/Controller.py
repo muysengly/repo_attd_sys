@@ -178,6 +178,10 @@ class Window(Ui_MainWindow, QMainWindow):
     def paintEvent(self, event):
         global cap
 
+        # Check if object is fully initialized
+        if not hasattr(self, "frame_count") or not hasattr(self, "SKIP_FRAMES") or not hasattr(self, "faces") or not hasattr(self, "database") or not hasattr(self, "label_camera") or not hasattr(self, "listView_attd") or not hasattr(self, "attd_timestamps"):
+            return
+
         if not cap:
             cap = cv2.VideoCapture(0)
         else:

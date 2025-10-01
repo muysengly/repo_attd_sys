@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -92,6 +92,13 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
     def paintEvent(self, e):
+
+        global cap
+
+        # Check if object is fully initialized
+        if not hasattr(self, "frame_count") or not hasattr(self, "SKIP_FRAMES") or not hasattr(self, "faces") or not hasattr(self, "label_camera"):
+            return
+
         _, frame = cap.read()
         frame = cv2.flip(frame, 1)
 

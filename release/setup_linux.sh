@@ -16,7 +16,8 @@ unzip tmp.zip
 rm tmp.zip
 
 
-new_name=$(date +%Y%m%d%H%M%S)_attendance_system
+# new_name=$(date +%Y%m%d%H%M%S)_attendance_system
+new_name=attendance_system
 
 
 # rename the unzipped folder

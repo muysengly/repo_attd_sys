@@ -10,15 +10,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralP
 
 
 @REM set new folder name with timestamp
-set year=%date:~0,4%
-set month=%date:~5,2%
-set day=%date:~8,2%
-set hour=%time:~0,2%
-set minute=%time:~3,2%
-set second=%time:~6,2%
-if "%hour:~0,1%"==" " set hour=0%hour:~1,1%
-set datetime=%year%%month%%day%%hour%%minute%%second%
-set new_name=%datetime%_attendance_system_app
+@REM set year=%date:~0,4%
+@REM set month=%date:~5,2%
+@REM set day=%date:~8,2%
+@REM set hour=%time:~0,2%
+@REM set minute=%time:~3,2%
+@REM set second=%time:~6,2%
+@REM if "%hour:~0,1%"==" " set hour=0%hour:~1,1%
+@REM set datetime=%year%%month%%day%%hour%%minute%%second%
+@REM set new_name=%datetime%_attendance_system_app
+
+set new_name=attendance_system
 
 
 @REM rename the unzipped folder

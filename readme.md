@@ -24,7 +24,7 @@
 ### Step 2: Setup Project
 
 ```
-curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_window.bat | cmd
+cmd /c curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_window.bat | cmd
 ```
 
 ## Step 3: Run Application

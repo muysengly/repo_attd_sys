@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[5]:
 
 
 import os
@@ -36,7 +36,13 @@ else:
     pass  # Other OS
 
 
-# In[ ]:
+# In[6]:
+
+
+print(sys.path)
+
+
+# In[7]:
 
 
 # from insightface.app import FaceAnalysis

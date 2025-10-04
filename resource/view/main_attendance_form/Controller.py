@@ -36,7 +36,7 @@ else:
     pass  # Other OS
 
 
-# In[ ]:
+# In[2]:
 
 
 from FaceModel import fa
@@ -60,7 +60,7 @@ from FaceDatabase import FaceDataBase
 from AttendanceDatabase import AttendanceDatabase
 
 
-# In[ ]:
+# In[3]:
 
 
 # Create log folder if it doesn't exist
@@ -70,7 +70,7 @@ if not os.path.exists(log_folder):
     os.makedirs(log_folder)
 
 
-# In[ ]:
+# In[4]:
 
 
 face_database = FaceDataBase(path_depth + "database.sqlite")
@@ -79,7 +79,7 @@ face_database = FaceDataBase(path_depth + "database.sqlite")
 attd_database = AttendanceDatabase(path_depth + "database.sqlite")
 
 
-# In[ ]:
+# In[5]:
 
 
 # initialize variables
@@ -97,7 +97,7 @@ if not os.path.exists(f"{path_depth}resource/variable/_threshold.pkl"):
     pickle.dump(70, open(f"{path_depth}resource/variable/_threshold.pkl", "wb"))
 
 
-# In[ ]:
+# In[6]:
 
 
 table_name = "table_face"
@@ -107,7 +107,7 @@ face_names = face_database.read_face_names(table_name)
 threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "rb"))
 
 
-# In[ ]:
+# In[7]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -115,7 +115,7 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[ ]:
+# In[8]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -126,7 +126,7 @@ def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{pat
     return response.json()
 
 
-# In[ ]:
+# In[9]:
 
 
 cap = []
@@ -275,7 +275,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[ ]:
+# In[10]:
 
 
 cap = cv2.VideoCapture(0)

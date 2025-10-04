@@ -39,12 +39,6 @@ Open the project folder and click on `run_window.bat`.
 
 ### Step 1: Update System and Install Dependencies
 
-#### - Update System
-
-```
-sudo apt update && sudo apt upgrade -y
-```
-
 #### - Install Curl
 
 ```

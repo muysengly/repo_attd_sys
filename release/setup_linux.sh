@@ -2,8 +2,8 @@
 
 
 # update and upgrade system packages
-sudo apt update
-sudo apt upgrade -y
+# sudo apt update
+# sudo apt upgrade -y
 
 
 # install necessary packages for linux

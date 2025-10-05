@@ -61,7 +61,7 @@ pip install pyqt5 opencv-python-headless insightface onnxruntime
 
 # create run_linux.sh script to run the application
 current_dir=$(pwd)
-cat << EOF > run_linux.sh
+cat << EOF > run.sh
 #!/bin/bash
 
 # change to the script's directory
@@ -80,12 +80,12 @@ EOF
 
 
 # change permission to execute the run_linux.sh script
-chmod +x run_linux.sh
+chmod +x run.sh
 
 
 # show completion message
 echo "Setup completed."
-echo "You can now run the application using run_linux.sh"
+echo "You can now run the application using run.sh"
 echo
 read -n 1 -s -r -p "Press any key to exit..."
 echo

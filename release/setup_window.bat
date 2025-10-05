@@ -25,6 +25,14 @@ IF EXIST "tmp.zip" DEL /F /Q "tmp.zip"
 @REM change directory to the application folder
 cd %new_name%
 
+@REM delete folder release
+rmdir /S /Q "release"
+
+@REM delete .gitignore file
+IF EXIST ".gitignore" DEL /F /Q ".gitignore"
+
+@REM delete readme.md
+IF EXIST "README.md" DEL /F /Q "README.md"
 
 @REM check if Python is installed
 python --version >nul 2>&1

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -40,7 +40,14 @@ else:
     pass  # Other OS
 
 
-# In[ ]:
+# In[2]:
+
+
+import onnxruntime
+print(f"ONNX Runtime version: {onnxruntime.__version__}")
+
+
+# In[3]:
 
 
 from FaceModel import fa
@@ -65,7 +72,7 @@ from FaceDatabase import FaceDataBase
 from AttendanceDatabase import AttendanceDatabase
 
 
-# In[ ]:
+# In[4]:
 
 
 # Create log folder if it doesn't exist
@@ -75,7 +82,7 @@ if not os.path.exists(log_folder):
     os.makedirs(log_folder)
 
 
-# In[ ]:
+# In[5]:
 
 
 face_database = FaceDataBase(path_depth + "database.sqlite")
@@ -84,7 +91,7 @@ face_database = FaceDataBase(path_depth + "database.sqlite")
 attd_database = AttendanceDatabase(path_depth + "database.sqlite")
 
 
-# In[ ]:
+# In[6]:
 
 
 # initialize variables
@@ -105,7 +112,7 @@ if not os.path.exists(f"{path_depth}resource/variable/_camera_index.pkl"):
     pickle.dump(0, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
 
 
-# In[ ]:
+# In[7]:
 
 
 table_name = "table_face"
@@ -117,7 +124,7 @@ threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "r
 camera_index = pickle.load(open(path_depth + "resource/variable/_camera_index.pkl", "rb"))
 
 
-# In[ ]:
+# In[8]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -125,7 +132,7 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[ ]:
+# In[9]:
 
 
 def check_camera(index):
@@ -156,7 +163,7 @@ if check_camera(camera_index) is False:
     pickle.dump(camera_index, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
 
 
-# In[ ]:
+# In[10]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -167,8 +174,10 @@ def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{pat
     return response.json()
 
 
-# In[ ]:
+# In[11]:
 
+
+cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)  # Use CAP_DSHOW to avoid NVIDIA virtual camera issues
 
 class Window(Ui_MainWindow, QMainWindow):
 
@@ -221,7 +230,7 @@ class Window(Ui_MainWindow, QMainWindow):
             return
 
         if not cap:
-            cap = cv2.VideoCapture(camera_index)
+            cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
         else:
 
             _, frame = cap.read()
@@ -313,10 +322,9 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[ ]:
+# In[12]:
 
 
-cap = cv2.VideoCapture(camera_index)
 app = QApplication([])
 win = Window()
 
@@ -366,7 +374,7 @@ def f_register():
     # win.showMinimized()
     cap.release()
     os.system("python " + path_depth + "resource/view/face_management_form/Controller.py")
-    cap.open(0)
+    cap.open(camera_index, cv2.CAP_DSHOW)
     # win.show()
 
 
@@ -380,7 +388,7 @@ def f_query():
     # win.hide()
     cap.release()
     os.system("python " + path_depth + "resource/view/attendance_database_form/Controller.py")
-    cap.open(0)
+    cap.open(camera_index, cv2.CAP_DSHOW)
     # win.show()
 
 
@@ -394,7 +402,7 @@ def goto_telegram():
     # win.hide()
     cap.release()
     os.system("python " + path_depth + "resource/view/telegram_form/Controller.py")
-    cap.open(0)
+    cap.open(camera_index, cv2.CAP_DSHOW)
     # win.show()
 
 
@@ -457,7 +465,7 @@ def f_update():
     except requests.RequestException as e:
         QMessageBox.critical(win, "Error", "No Internet Connection!")
 
-    cap.open(0)
+    cap.open(camera_index, cv2.CAP_DSHOW)
 
 
 win.pushButton_update.clicked.connect(f_update)
@@ -484,11 +492,11 @@ def combo_cam_select(index):
 
     if check_camera(index) is False:
         QMessageBox.warning(win, "Camera Error", f"Cannot open camera #{index}.")
-        cap = cv2.VideoCapture(camera_index)
+        cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
         win.comboBox_camera.setCurrentIndex(camera_index)
     else:
         camera_index = index
-        cap = cv2.VideoCapture(camera_index)
+        cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
         pickle.dump(camera_index, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
 
 

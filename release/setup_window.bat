@@ -55,12 +55,15 @@ pip install --upgrade pip
 
 
 @REM install dependencies
-pip install pyqt5 opencv-python insightface onnxruntime
+pip install PyQt5==5.15.11 
+pip install opencv-python==4.12.0.88
+pip install insightface==0.7.3
+pip install onnxruntime==1.19.2
 
 
 @REM create run_window.vbs script to run the application in a hidden window
 echo @echo off >> run_window.bat
-echo call venv\Scripts\activate >> run_window.bat
+@REM echo call venv\Scripts\activate >> run_window.bat
 echo start /min cmd /c python Main.py >> run_window.bat
 
 @REM show completion message

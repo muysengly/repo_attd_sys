@@ -24,6 +24,19 @@ mv repo_attd_sys-main $new_name
 cd $new_name
 
 
+# delete folder release
+if [ -d "release" ]; then
+    rm -rf release
+fi
+# delete .gitignore file
+if [ -f ".gitignore" ]; then
+    rm .gitignore
+fi
+# delete readme.md
+if [ -f "README.md" ]; then
+    rm README.md
+fi
+
 # install dependencies for insightface
 # sudo apt install libopenblas-dev liblapack-dev libjpeg-dev libpng-dev -y
 

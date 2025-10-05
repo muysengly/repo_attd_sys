@@ -26,7 +26,7 @@ IF EXIST "tmp.zip" DEL /F /Q "tmp.zip"
 cd %new_name%
 
 @REM delete folder release
-rmdir /S /Q "release"
+IF EXIST "release" rmdir /S /Q "release"
 
 @REM delete .gitignore file
 IF EXIST ".gitignore" DEL /F /Q ".gitignore"

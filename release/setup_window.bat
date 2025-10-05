@@ -45,12 +45,13 @@ IF %ERRORLEVEL% NEQ 0 (
 
 
 @REM create and activate virtual environment
-if not exist venv python -m venv venv
-call venv\Scripts\activate.bat
+@REM if not exist venv python -m venv venv
+@REM call venv\Scripts\activate.bat
 
 
 @REM upgrade pip
-python.exe -m pip install --upgrade pip
+@REM python.exe -m pip install --upgrade pip
+pip install --upgrade pip
 
 
 @REM install dependencies

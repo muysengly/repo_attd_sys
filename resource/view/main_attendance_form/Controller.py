@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import os
@@ -12,7 +12,11 @@ path_depth = "../../../"  # adjust the current working directory
 
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
-    os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
+
+    from PyQt5 import uic
+
+    with open("View.ui", "r", encoding="utf-8") as ui_file, open("View.py", "w", encoding="utf-8") as py_file:
+        uic.compileUi(ui_file, py_file, execute=True)
 
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
@@ -36,7 +40,7 @@ else:
     pass  # Other OS
 
 
-# In[2]:
+# In[ ]:
 
 
 from FaceModel import fa
@@ -48,6 +52,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import cv2
+import time
 import pickle
 import zipfile
 import requests
@@ -60,7 +65,7 @@ from FaceDatabase import FaceDataBase
 from AttendanceDatabase import AttendanceDatabase
 
 
-# In[3]:
+# In[ ]:
 
 
 # Create log folder if it doesn't exist
@@ -70,7 +75,7 @@ if not os.path.exists(log_folder):
     os.makedirs(log_folder)
 
 
-# In[4]:
+# In[ ]:
 
 
 face_database = FaceDataBase(path_depth + "database.sqlite")
@@ -79,7 +84,7 @@ face_database = FaceDataBase(path_depth + "database.sqlite")
 attd_database = AttendanceDatabase(path_depth + "database.sqlite")
 
 
-# In[5]:
+# In[ ]:
 
 
 # initialize variables
@@ -96,8 +101,11 @@ if not os.path.exists(f"{path_depth}resource/variable/_photo.pkl"):
 if not os.path.exists(f"{path_depth}resource/variable/_threshold.pkl"):
     pickle.dump(70, open(f"{path_depth}resource/variable/_threshold.pkl", "wb"))
 
+if not os.path.exists(f"{path_depth}resource/variable/_camera_index.pkl"):
+    pickle.dump(0, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
 
-# In[6]:
+
+# In[ ]:
 
 
 table_name = "table_face"
@@ -106,8 +114,10 @@ face_names = face_database.read_face_names(table_name)
 
 threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "rb"))
 
+camera_index = pickle.load(open(path_depth + "resource/variable/_camera_index.pkl", "rb"))
 
-# In[7]:
+
+# In[ ]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -115,7 +125,38 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[8]:
+# In[ ]:
+
+
+def check_camera(index):
+
+    _cap = cv2.VideoCapture(index, cv2.CAP_DSHOW)  # CAP_DSHOW for Windows (avoid warnings)
+    if _cap.isOpened():
+        ret, frame = _cap.read()
+        if ret and frame is not None:
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            # Compute variance of pixel intensities
+            variance = np.var(gray)
+
+            # Physical cameras usually have higher variance (non-static image)
+            if variance > 100:  # adjust threshold as needed; 100 is a safer value to avoid false positives
+                _cap.release()
+                return True
+
+            else:
+                _cap.release()
+                return False
+
+    else:
+        _cap.release()
+        return False
+
+if check_camera(camera_index) is False:
+    camera_index = 0
+    pickle.dump(camera_index, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
+
+
+# In[ ]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -126,10 +167,7 @@ def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{pat
     return response.json()
 
 
-# In[9]:
-
-
-cap = []
+# In[ ]:
 
 
 class Window(Ui_MainWindow, QMainWindow):
@@ -183,7 +221,7 @@ class Window(Ui_MainWindow, QMainWindow):
             return
 
         if not cap:
-            cap = cv2.VideoCapture(0)
+            cap = cv2.VideoCapture(camera_index)
         else:
 
             _, frame = cap.read()
@@ -275,10 +313,10 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[10]:
+# In[ ]:
 
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(camera_index)
 app = QApplication([])
 win = Window()
 
@@ -287,7 +325,7 @@ win.spinBox_threshold.setValue(threshold)
 
 version_string = open(path_depth + "resource/variable/_version.txt", "r").read().strip()
 version_int = list(map(int, version_string.split(".")))
-win.label_version.setText(f"{version_string}")
+# win.label_version.setText(f"{version_string}")
 
 
 win.pushButton_telegram.setText(" Telegram")
@@ -303,6 +341,12 @@ win.pushButton_register.setText(" Register")
 win.pushButton_register.setIcon(QIcon(f"{path_depth}resource/asset/register.png"))
 
 win.pushButton_close.setStyleSheet("background-color: red; color: white;")
+
+win.comboBox_camera.clear()
+for i in range(5):
+    win.comboBox_camera.addItem(f"Camera #{i}", i)
+
+win.comboBox_camera.setCurrentIndex(camera_index)
 
 
 def f_threshold_change():
@@ -415,6 +459,7 @@ def f_update():
 
     cap.open(0)
 
+
 win.pushButton_update.clicked.connect(f_update)
 
 # win.pushButton_update.deleteLater()
@@ -428,6 +473,26 @@ def f_close():
 
 
 win.pushButton_close.clicked.connect(f_close)
+
+
+def combo_cam_select(index):
+    global cap, camera_index
+
+    print("Combo Cam Select ", index)
+
+    cap.release()
+
+    if check_camera(index) is False:
+        QMessageBox.warning(win, "Camera Error", f"Cannot open camera #{index}.")
+        cap = cv2.VideoCapture(camera_index)
+        win.comboBox_camera.setCurrentIndex(camera_index)
+    else:
+        camera_index = index
+        cap = cv2.VideoCapture(camera_index)
+        pickle.dump(camera_index, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
+
+
+win.comboBox_camera.activated.connect(combo_cam_select)
 
 
 app.exec_()

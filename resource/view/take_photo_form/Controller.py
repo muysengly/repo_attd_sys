@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[5]:
+# In[ ]:
 
 
 import os
@@ -12,7 +12,11 @@ path_depth = "../../../"  # adjust the current working directory
 
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
-    os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
+
+    from PyQt5 import uic
+
+    with open("View.ui", "r", encoding="utf-8") as ui_file, open("View.py", "w", encoding="utf-8") as py_file:
+        uic.compileUi(ui_file, py_file, execute=True)
 
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
@@ -36,13 +40,13 @@ else:
     pass  # Other OS
 
 
-# In[6]:
+# In[2]:
 
 
-print(sys.path)
+# print(sys.path)
 
 
-# In[7]:
+# In[3]:
 
 
 # from insightface.app import FaceAnalysis
@@ -62,14 +66,14 @@ import numpy as np
 # import subprocess
 
 
-# In[ ]:
+# In[4]:
 
 
 # fa = FaceAnalysis(name="buffalo_sc", root=f"{os.getcwd()}/{path_depth}resource/utility/", providers=["CPUExecutionProvider"])
 # fa.prepare(ctx_id=-1, det_thresh=0.5, det_size=(320, 320))
 
 
-# In[ ]:
+# In[5]:
 
 
 cap = cv2.VideoCapture(0)
@@ -144,7 +148,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.label_camera.setPixmap(q_pixmap)
 
 
-# In[ ]:
+# In[6]:
 
 
 app = QApplication([])

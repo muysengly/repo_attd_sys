@@ -12,16 +12,18 @@ path_depth = "../../../"  # adjust the current working directory
 
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
-    os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
+
+    from PyQt5 import uic
+
+    with open("View.ui", "r", encoding="utf-8") as ui_file, open("View.py", "w", encoding="utf-8") as py_file:
+        uic.compileUi(ui_file, py_file, execute=True)
 
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
 
-
 os.environ["QT_SCALE_FACTOR"] = "1"  # Set scaling factor
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"  # Enable automatic scaling
 os.environ["QT_SCREEN_SCALE_FACTORS"] = "1"  # Set screen scaling
-
 
 if os.name == "nt":  # Windows NT: Windows New Technology
     import ctypes

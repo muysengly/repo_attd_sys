@@ -12,7 +12,11 @@ path_depth = "../../../"  # adjust the current working directory
 
 if "__file__" not in globals():  # check if running in Jupyter Notebook
     os.system("jupyter nbconvert --to script Controller.ipynb --output Controller")  # convert notebook to script
-    os.system("pyuic5 -x View.ui -o View.py")  # convert UI file to Python script
+
+    from PyQt5 import uic
+
+    with open("View.ui", "r", encoding="utf-8") as ui_file, open("View.py", "w", encoding="utf-8") as py_file:
+        uic.compileUi(ui_file, py_file, execute=True)
 
 
 sys.path.append(os.path.abspath(os.path.join(path_depth, "resource", "utility")))
@@ -31,8 +35,6 @@ elif os.name == "posix":  # POSIX: Portable Operating System Interface
     if "darwin" in os.sys.platform:
         pass  # macOS system
     else:
-        # os.environ["DISPLAY"] = ":0"  # Set display
-        # os.environ["QT_QPA_PLATFORM"] = "wayland"  # Set platform for Qt
         pass  # Linux system
 else:
     pass  # Other OS
@@ -50,21 +52,13 @@ from PyQt5.QtWidgets import *
 import pickle
 
 
-# In[3]:
+# In[ ]:
 
 
 token = pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))
-print(f"Token: {token}")
-
-
-# In[4]:
-
-
-# chat_id = ["fasdf", "asdfsadf"]
-# pickle.dump(chat_id, open(f"{path_depth}resource/variable/_chat_id.pkl", "wb"))
-
+# print(f"Token: {token}")
 chat_id = pickle.load(open(f"{path_depth}resource/variable/_chat_id.pkl", "rb"))
-print(f"Chat ID: {chat_id}")
+# print(f"Chat ID: {chat_id}")
 
 
 # In[5]:
@@ -85,7 +79,7 @@ class Window(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-# In[ ]:
+# In[1]:
 
 
 app = QApplication([])

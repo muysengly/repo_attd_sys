@@ -322,7 +322,7 @@ class Window(Ui_MainWindow, QMainWindow):
             self.label_camera.setPixmap(q_pixmap)
 
 
-# In[12]:
+# In[ ]:
 
 
 app = QApplication([])

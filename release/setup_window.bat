@@ -69,10 +69,10 @@ pip install insightface==0.7.3
 pip install onnxruntime==1.19.2
 
 
-@REM create run_window.vbs script to run the application in a hidden window
-echo @echo off >> run_window.bat
-@REM echo call venv\Scripts\activate >> run_window.bat
-echo start /min cmd /c python Main.py >> run_window.bat
+@REM create run.vbs script to run the application in a hidden window
+echo @echo off >> run.bat
+@REM echo call venv\Scripts\activate >> run.bat
+echo start /min cmd /c python Main.py >> run.bat
 
 @REM show completion message
 echo Setup completed. 

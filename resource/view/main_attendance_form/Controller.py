@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import os
@@ -40,14 +40,14 @@ else:
     pass  # Other OS
 
 
-# In[2]:
+# In[ ]:
 
 
 import onnxruntime
 print(f"ONNX Runtime version: {onnxruntime.__version__}")
 
 
-# In[3]:
+# In[ ]:
 
 
 from FaceModel import fa
@@ -72,7 +72,7 @@ from FaceDatabase import FaceDataBase
 from AttendanceDatabase import AttendanceDatabase
 
 
-# In[4]:
+# In[ ]:
 
 
 # Create log folder if it doesn't exist
@@ -82,7 +82,7 @@ if not os.path.exists(log_folder):
     os.makedirs(log_folder)
 
 
-# In[5]:
+# In[ ]:
 
 
 face_database = FaceDataBase(path_depth + "database.sqlite")
@@ -91,7 +91,7 @@ face_database = FaceDataBase(path_depth + "database.sqlite")
 attd_database = AttendanceDatabase(path_depth + "database.sqlite")
 
 
-# In[6]:
+# In[ ]:
 
 
 # initialize variables
@@ -112,7 +112,7 @@ if not os.path.exists(f"{path_depth}resource/variable/_camera_index.pkl"):
     pickle.dump(0, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
 
 
-# In[7]:
+# In[ ]:
 
 
 table_name = "table_face"
@@ -124,7 +124,7 @@ threshold = pickle.load(open(path_depth + "resource/variable/_threshold.pkl", "r
 camera_index = pickle.load(open(path_depth + "resource/variable/_camera_index.pkl", "rb"))
 
 
-# In[8]:
+# In[ ]:
 
 
 def compare_faces_cosine(emb1, emb2):
@@ -132,12 +132,12 @@ def compare_faces_cosine(emb1, emb2):
     return similarity
 
 
-# In[9]:
+# In[ ]:
 
 
 def check_camera(index):
 
-    _cap = cv2.VideoCapture(index, cv2.CAP_DSHOW)  # CAP_DSHOW for Windows (avoid warnings)
+    _cap = cv2.VideoCapture(index)  # CAP_DSHOW for Windows (avoid warnings)
     if _cap.isOpened():
         ret, frame = _cap.read()
         if ret and frame is not None:
@@ -158,12 +158,12 @@ def check_camera(index):
         _cap.release()
         return False
 
-if check_camera(camera_index) is False:
-    camera_index = 0
-    pickle.dump(camera_index, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
+# if check_camera(camera_index) is False:
+#     camera_index = 0
+#     pickle.dump(camera_index, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
 
 
-# In[10]:
+# In[ ]:
 
 
 def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{path_depth}resource/variable/_token.pkl", "rb"))):
@@ -174,10 +174,10 @@ def send_telegram_message(chat_id, message, photo, token=pickle.load(open(f"{pat
     return response.json()
 
 
-# In[11]:
+# In[ ]:
 
 
-cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)  # Use CAP_DSHOW to avoid NVIDIA virtual camera issues
+cap = cv2.VideoCapture(camera_index)  # Use CAP_DSHOW to avoid NVIDIA virtual camera issues
 
 class Window(Ui_MainWindow, QMainWindow):
 
@@ -230,7 +230,7 @@ class Window(Ui_MainWindow, QMainWindow):
             return
 
         if not cap:
-            cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
+            cap = cv2.VideoCapture(camera_index)
         else:
 
             _, frame = cap.read()
@@ -374,7 +374,7 @@ def f_register():
     # win.showMinimized()
     cap.release()
     os.system("python " + path_depth + "resource/view/face_management_form/Controller.py")
-    cap.open(camera_index, cv2.CAP_DSHOW)
+    cap.open(camera_index)
     # win.show()
 
 
@@ -388,7 +388,7 @@ def f_query():
     # win.hide()
     cap.release()
     os.system("python " + path_depth + "resource/view/attendance_database_form/Controller.py")
-    cap.open(camera_index, cv2.CAP_DSHOW)
+    cap.open(camera_index)
     # win.show()
 
 
@@ -402,7 +402,7 @@ def goto_telegram():
     # win.hide()
     cap.release()
     os.system("python " + path_depth + "resource/view/telegram_form/Controller.py")
-    cap.open(camera_index, cv2.CAP_DSHOW)
+    cap.open(camera_index)
     # win.show()
 
 
@@ -465,7 +465,7 @@ def f_update():
     except requests.RequestException as e:
         QMessageBox.critical(win, "Error", "No Internet Connection!")
 
-    cap.open(camera_index, cv2.CAP_DSHOW)
+    cap.open(camera_index)
 
 
 win.pushButton_update.clicked.connect(f_update)
@@ -486,18 +486,20 @@ win.pushButton_close.clicked.connect(f_close)
 def combo_cam_select(index):
     global cap, camera_index
 
-    print("Combo Cam Select ", index)
+    # print("Combo Cam Select ", index)
 
-    cap.release()
+    if index != camera_index:
 
-    if check_camera(index) is False:
-        QMessageBox.warning(win, "Camera Error", f"Cannot open camera #{index}.")
-        cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
-        win.comboBox_camera.setCurrentIndex(camera_index)
-    else:
-        camera_index = index
-        cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
-        pickle.dump(camera_index, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
+        cap.release()
+
+        if check_camera(index) is False:
+            QMessageBox.warning(win, "Camera Error", f"Cannot open camera #{index}.")
+            cap = cv2.VideoCapture(camera_index)
+            win.comboBox_camera.setCurrentIndex(camera_index)
+        else:
+            camera_index = index
+            cap = cv2.VideoCapture(camera_index)
+            pickle.dump(camera_index, open(f"{path_depth}resource/variable/_camera_index.pkl", "wb"))
 
 
 win.comboBox_camera.activated.connect(combo_cam_select)

@@ -23,7 +23,7 @@
 
 ### Step 2: Setup Project
 
-```
+```shell
 cmd /c curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_window.bat | cmd
 ```
 
@@ -31,32 +31,54 @@ cmd /c curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main
 
 #### - Run The Application File
 
-Open the project folder and click on `run_window.bat`.
+Open the project folder and click on `run.bat`.
 
 ---
 
 ## + Linux OS (Ubuntu)
 
-### Step 1: Update System and Install Dependencies
+> Ubuntu Desktop already has Python 3 installed by default.
+
+### Step 1: Install Dependencies
 
 #### - Install Curl
 
-```
+```shell
 sudo apt install curl -y
 ```
 
 ### Step 2: Setup Project
 
-```
+```shell
 curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_linux.sh | bash
 ```
 
 ### Step 3: Run Application
 
-Open the project folder and click on `run_linux.sh`.
+Open the project folder and click on `run.sh`.
 
 ---
 
 ## + Mac OS
 
-> macOS support is pending; we currently need a macOS device for testing and development.
+### Step 1: Install Homebrew
+
+```shell
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+### Step 2: Install Python
+
+```shell
+brew install python3
+```
+
+### Step 3: Setup Project
+
+```shell
+curl -fsSL https://raw.githubusercontent.com/muysengly/repo_attd_sys/main/release/setup_mac.sh | bash
+```
+
+### Step 4: Run Application
+
+Open the project folder and click on `run.command`.

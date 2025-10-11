@@ -59,7 +59,7 @@ python -m pip install --upgrade pip
 pip install pyqt5 opencv-python-headless insightface onnxruntime
 
 
-# create run_linux.sh script to run the application
+# create run.sh script to run the application
 current_dir=$(pwd)
 cat << EOF > run.sh
 #!/bin/bash

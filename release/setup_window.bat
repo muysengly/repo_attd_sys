@@ -1,5 +1,7 @@
 @echo off
 
+@REM CPU intel
+
 
 @REM download the repository
 curl -L -o tmp.zip https://github.com/muysengly/repo_attd_sys/archive/refs/heads/main.zip
